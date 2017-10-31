@@ -8,13 +8,12 @@ import java.util.ArrayList;
 public class Controller {
 
 	private String rulesPath;
-	private ArrayList<String> rules	;
+	private String[][] rules	;
 	
 	
 	public Controller() {
 		super();
 		this.rulesPath= "null";
-		this.rules = new ArrayList<String>();
 	}
 
 	public void setRulesPath(String path) {
@@ -25,14 +24,18 @@ public class Controller {
 		try {
 		      FileReader ficheiro = new FileReader(this.rulesPath);
 		      BufferedReader leitor = new BufferedReader(ficheiro);
-		 
+		      ArrayList<String> rulesAux = new ArrayList<>();
 		      String linha = leitor.readLine();
 		      while (linha != null) {
-		    	  rules.add(linha);
+		    	  rulesAux.add(linha);
 		    	  System.out.println(linha);
 		    	  linha = leitor.readLine();
 		      }
-		 
+		      rules = new String [2][rulesAux.size()];
+		      for(int i = 0; i<rulesAux.size();i++) {
+		    	  rules[1][i]= rulesAux.get(i);
+		      }
+		      
 		      ficheiro.close();
 		    } catch (IOException e) {
 		    	  System.err.printf("Erro na abertura do arquivo: %s.\n",
