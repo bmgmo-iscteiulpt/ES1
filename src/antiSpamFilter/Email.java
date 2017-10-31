@@ -12,6 +12,10 @@ public class Email {
 		this.rules = new ArrayList<String>();
 	}
 
+	public ArrayList<String> getRules() {
+		return rules;
+	}
+
 	public void setId(String id) {
 		this.id = id;
 	}

@@ -15,9 +15,10 @@ public class Controller {
 	private ArrayList <Email> spam;
 	
 	public Controller() {
-		super();
 		this.rulesPath= "null";
+		this.rules = new ArrayList<>();
 		this.ham = new ArrayList<>();
+		this.spam = new ArrayList<>();
 	}
 
 	public void setRulesPath(String path) {
@@ -96,5 +97,16 @@ public class Controller {
 		    	  System.err.printf("Erro na abertura do arquivo: %s.\n",
 		          e.getMessage());
 		    }
+	}
+	
+	public int calcularFP() {
+		
+		for(Email e : ham) {
+			for(Rule r :rules) {
+				if(e.getRules().contains(r.getName())) {
+			}
+		}
+		return 0;
+		
 	}
 }
