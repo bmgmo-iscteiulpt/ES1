@@ -21,18 +21,25 @@ public class Controller {
 		this.spam = new ArrayList<>();
 	}
 
+	// Definição caminho do ficheiro rules.cf
+	
 	public void setRulesPath(String path) {
 		this.rulesPath = path;
 	}
+	
+	// Definição caminho do ficheiro ham.txt
 	
 	public void setHamPath(String path) {
 		this.hamPath = path;
 	}
 	
+	// Definição caminho do ficheiro spam.txt
+	
 	public void setSpamPath(String path) {
 		this.spamPath = path;
 	}
 	
+	// Leitura do ficheiro rules.cf, criação de Rules e adição ao vetor
 	public void readRules() {
 		try {
 		      FileReader ficheiro = new FileReader(this.rulesPath);
@@ -51,6 +58,8 @@ public class Controller {
 		          e.getMessage());
 		    }
 	}
+	
+	// Leitura do ficheiro ham.txt, criação de Emails Ham e adição ao vetor
 	
 	public void readHam() {
 		try {
@@ -76,6 +85,8 @@ public class Controller {
 		    }
 	}
 	
+	// Leitura do ficheiro spam.txt, criação de Emails Spam e adição ao vetor
+	
 	public void readSpam() {
 		try {
 		      FileReader ficheiro = new FileReader(this.spamPath);
@@ -99,14 +110,74 @@ public class Controller {
 		    }
 	}
 	
-	public int calcularFP() {
-		
-		for(Email e : ham) {
-			for(Rule r :rules) {
-				if(e.getRules().contains(r.getName())) {
-			}
+	// Consulta do peso de uma determinada regra
+	
+	public double getPeso(String rule) {
+		for(Rule r : rules) {
+			if(r.getName().equals(rule))
+				return r.getPeso();
 		}
 		return 0;
+	}
+	
+	// Cálculo de Falsos Positivos recorrendo aos emails Ham considerados SPAM ( somatório > 5)
+	
+	public int calcularFP() {
+		int falsosPositivos = 0;
+		
+		for(Email e : ham) {
+			int somatório = 0;
+			
+			for(String r :e.getRules()) {
+				somatório += getPeso(r);
+			}
+			if(somatório>5)
+				falsosPositivos++;
+		}
+		return falsosPositivos;
 		
 	}
+		
+	// Cálculo de Falsos Negativos recorrendo aos emails Spam considerados HAM ( somatório < 5)
+	
+	public int calcularFN() {
+		int falsosNegativos = 0;
+		
+		for(Email e : spam) {
+			int somatório = 0;
+			
+			for(String r :e.getRules()) {
+				somatório += getPeso(r);
+			}
+			if(somatório<=5)
+				falsosNegativos++;
+		}
+		return falsosNegativos;
+		
+	}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 }
