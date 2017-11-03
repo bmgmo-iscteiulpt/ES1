@@ -2,13 +2,13 @@ package antiSpamFilter;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
@@ -20,13 +20,17 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.JLabel;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.border.LineBorder;
 
-public class GUI extends JFrame {
+@SuppressWarnings("serial")
+public class GUI {
 
+	private JFrame janelaPrincipal;
 	private JPanel painel;
 	static final double fator=0.5;
 	private static Font f =new Font("Century Gothic", Font.PLAIN,18);
@@ -36,27 +40,26 @@ public class GUI extends JFrame {
 	private JTextField fn;
 	private JTable table;
 	private JScrollPane scroll;
-
-	/**
-	 * Launch the application.
-	 */
+	final JFileChooser fc = new JFileChooser();
+	
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					GUI janela = new GUI();
-					janela.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		GUI janela = new GUI();
 	}
 
-	/**
-	 * Create the frame.
-	 */
+// FRAME
+	
 	public GUI() {
+//configuração da janela
+		janelaPrincipal = new JFrame("AntiSpammers");
+		janelaPrincipal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		janelaPrincipal.setBounds(0,0,(int) (screenSize.width*fator),(int) (screenSize.height*fator));
+		painel = new JPanel();
+		painel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		janelaPrincipal.setContentPane(painel);
+		painel.setLayout(new MigLayout("", "[grow][grow][grow][][grow]", "[100px][100px][][][250px][100px][][]"));
+		janelaPrincipal.setResizable(false);
+		janelaPrincipal.setLocationRelativeTo(null);	
 		
 //MENU
 		
@@ -73,28 +76,62 @@ public class GUI extends JFrame {
 		menuBar.add(guardar);
 		menuBar.add(historico);
 		
-		setJMenuBar(menuBar);
+		JMenuItem rules_cf = new JMenuItem("rules.cf");
+		JMenuItem ham_txt = new JMenuItem("ham.txt");
+		JMenuItem spam_txt = new JMenuItem("spam.txt");
 		
-//configuração da janela
+		rules_cf.setFont(f2);
+		ham_txt.setFont(f2);
+		spam_txt.setFont(f2);
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		setBounds(0,0,(int) (screenSize.width*fator),(int) (screenSize.height*fator));
-		painel = new JPanel();
-		painel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(painel);
-		painel.setLayout(new MigLayout("", "[grow][grow][grow][][grow]", "[100px][100px][][][250px][100px][][]"));
-		setResizable(false);
-		setLocationRelativeTo(null);
+		ficheiros.add(rules_cf);
+		ficheiros.add(ham_txt);
+		ficheiros.add(spam_txt);
+		
+		janelaPrincipal.setJMenuBar(menuBar);
+		
+// Listener Menu
+		rules_cf.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			        int returnVal = fc.showOpenDialog(janelaPrincipal);
+			        if (returnVal == JFileChooser.APPROVE_OPTION) {
+			          info.setText("Caminho para o ficheiro rules.cf definido");
+			        }
+			}
+		});
+		
+		ham_txt.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			        int returnVal = fc.showOpenDialog(janelaPrincipal);
+			        if (returnVal == JFileChooser.APPROVE_OPTION) {
+			          info.setText("Caminho para o ficheiro ham.txt definido");
+			        }
+			}
+		});
+
+		spam_txt.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			        int returnVal = fc.showOpenDialog(janelaPrincipal);
+			        if (returnVal == JFileChooser.APPROVE_OPTION) {
+			          info.setText("Caminho para o ficheiro spam.txt definido");
+			        }
+			}
+		});
 		
 // Info e titulo da tabela
 		
 		info = new JTextField();
 		info.setMinimumSize(new Dimension(400, 40));	
 		info.setFont(f);
+		info.setForeground(Color.WHITE);
 		painel.add(info, "cell 0 0 2 1,alignx center");
 		info.setColumns(10);
-		info.setEnabled(false);
+		info.setEditable(false);
+		info.setBackground(Color.BLACK);
+		info.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		JLabel regras = new JLabel("Regras e pesos respetivos");
 		painel.add(regras, "cell 0 1 2 1,alignx center");
@@ -117,6 +154,7 @@ public class GUI extends JFrame {
 		falsospositivos.setFont(f);
 		
 		
+		
 		JLabel falsosnegativos = new JLabel("Falsos Negativos");
 		painel.add(falsosnegativos, "cell 4 0 1 2,alignx center");
 		falsosnegativos.setFont(f);
@@ -126,14 +164,17 @@ public class GUI extends JFrame {
 		fp.setColumns(5);
 		fp.setMinimumSize(new Dimension(75, 75));
 		fp.setFont(f);
-		fp.setEnabled(false);
+		fp.setEditable(false);
+		fp.setBackground(Color.WHITE);
 		
 		fn = new JTextField();
 		painel.add(fn, "cell 4 2,alignx center");
 		fn.setColumns(5);
 		fn.setMinimumSize(new Dimension(75, 75));
 		fn.setFont(f);
-		fn.setEnabled(false);
+		fn.setEditable(false);
+		fn.setBackground(Color.WHITE);
+		
 		painel.add(random, "cell 2 4,alignx center");
 		
 //Tabela Regras e pesos associados
@@ -190,6 +231,7 @@ public class GUI extends JFrame {
 		});
 		painel.add(iniciar, "cell 2 5 3 1,alignx center");
 		
+		janelaPrincipal.setVisible(true);
 	}
 
 }
