@@ -1,101 +1,194 @@
 package antiSpamFilter;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Toolkit;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-public class GUI {
-	
+import net.miginfocom.swing.MigLayout;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.JLabel;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JTable;
+import javax.swing.border.LineBorder;
+
+public class GUI extends JFrame {
+
+	private JPanel contentPane;
+	static final double fator=0.5;
+	private static Font f =new Font("Century Gothic", Font.PLAIN,18);
+	private static Font f2 =new Font("Century Gothic", Font.PLAIN,16);
+	private JTextField info;
+	private JTextField fp;
+	private JTextField fn;
+	private JTable table;
+	private JScrollPane scroll;
+
+	/**
+	 * Launch the application.
+	 */
 	public static void main(String[] args) {
-		JFrame GUI = new JFrame("Anti-Spamers");
-		
-		
-		//Menu
-		JPanel GUI_1 = new JPanel();
-		
-		JButton ficheiros = new JButton("Ficheiros");
-		JButton Guardar = new JButton("Guardar");
-		JButton Histórico = new JButton("Histórico");
-		GUI_1.add(ficheiros);
-		GUI_1.add(Guardar);
-		GUI_1.add(Histórico);
-		
-		//Info FP FN
-		JPanel GUI_2= new JPanel();
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					GUI janela = new GUI();
+					janela.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 
-		JTextArea Info = new JTextArea(10,10);
-		Info.setText("Informação");
-		JLabel Fpositivos= new JLabel("                       FP");
-		JLabel Fnegativos= new JLabel("                       FN");
-		JTextField FP = new JTextField(5);
-		JTextField FN = new JTextField(5);
+	/**
+	 * Create the frame.
+	 */
+	public GUI() {
 		
-		GUI_2.add(Info);
-		GUI_2.add(Fpositivos);
-		GUI_2.add(FP);
-		GUI_2.add(Fnegativos);
-		GUI_2.add(FN);
+//MENU
 		
-		
-		//Tabela Regras e pesos associados
-		JPanel GUI_3 = new JPanel();
-		JPanel GUI_4 = new JPanel();
-		
-		GUI_3.setLayout(new BorderLayout());
-		GUI_4.setLayout(new GridLayout(1,3));
-		
-		//assumi que existem 5 regras
-		
-		 Object[][] rules = new Object[][] {
-	            {"T_LOTS_OF_MONEY", 4 },
-	            {"HTML_IMAGE_RATIO_04", 2},
-	            {"NORMAL_HTTP_TO_IP",3},
-	            {"SUBJECT_NEEDS_ENCODING",1},
-	            {"LOW_PRICE",5},
-	        };
-	     String [] colunas = new String[] {"Regras" , "Peso"};
-	     
-	    DefaultTableModel model = new DefaultTableModel(rules, colunas);  
-		JTable regras= new JTable(model);
-		regras.add(new JScrollPane());
-		 
-		//grafico
-		JTextArea grafico = new JTextArea(5,5);
-		grafico.setText("Gráfico");
-		
-		//BOTÕES
-		JButton aleatório = new JButton("Aleatório");
-		JButton nsga = new JButton("NSGA II");
-		
-		GUI_3.add(regras, BorderLayout.WEST);
-		
-		
-		GUI_4.add(grafico);
-		GUI_4.add(aleatório);
-		GUI_4.add(nsga);
-		
-		GUI_3.add(GUI_4, BorderLayout.EAST);
-		
-		GUI_1.add(GUI_2);
-		GUI_1.add(GUI_3);
-		GUI.add(GUI_1);
-		
-		//configuração da janela
-		GUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		GUI.pack();
-		GUI.setSize(500,400);
-		GUI.setVisible(true);
+		JMenuBar menuBar = new JMenuBar();
+		JMenu ficheiros = new JMenu("Ficheiros");
+		JMenu guardar = new JMenu("Guardar configuração");
+		JMenu historico = new JMenu("Histórico");
 
+		ficheiros.setFont(f2);
+		guardar.setFont(f2);
+		historico.setFont(f2);
+		
+		menuBar.add(ficheiros);
+		menuBar.add(guardar);
+		menuBar.add(historico);
+		
+		setJMenuBar(menuBar);
+		
+//configuração da janela
+		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		setBounds(0,0,(int) (screenSize.width*fator),(int) (screenSize.height*fator));
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(new MigLayout("", "[grow][grow][grow][][grow]", "[100px][100px][][][250px][100px][][]"));
+		setResizable(false);
+		setLocationRelativeTo(null);
+		
+// Info e titulo da tabela
+		
+		info = new JTextField();
+		info.setMinimumSize(new Dimension(400, 40));	
+		info.setFont(f);
+		contentPane.add(info, "cell 0 0 2 1,alignx center");
+		info.setColumns(10);
+		info.setEnabled(false);
+		
+		JLabel regras = new JLabel("Regras e pesos respetivos");
+		contentPane.add(regras, "cell 0 1 2 1,alignx center");
+		regras.setFont(f);
+		
+// Botões 
+		
+		JButton random = new JButton("Aleatório");
+		random.setMinimumSize(new Dimension(140, 60));;	
+		random.setFont(f);
+		random.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		
+//FP e FN
+       		
+		JLabel falsospositivos = new JLabel("Falsos Positivos");
+		contentPane.add(falsospositivos, "cell 2 0 1 2,alignx center");
+		falsospositivos.setFont(f);
+		
+		
+		JLabel falsosnegativos = new JLabel("Falsos Negativos");
+		contentPane.add(falsosnegativos, "cell 4 0 1 2,alignx center");
+		falsosnegativos.setFont(f);
+		
+		fp = new JTextField();
+		contentPane.add(fp, "cell 2 2,alignx center,aligny center");
+		fp.setColumns(5);
+		fp.setMinimumSize(new Dimension(75, 75));
+		fp.setFont(f);
+		fp.setEnabled(false);
+		
+		fn = new JTextField();
+		contentPane.add(fn, "cell 4 2,alignx center");
+		fn.setColumns(5);
+		fn.setMinimumSize(new Dimension(75, 75));
+		fn.setFont(f);
+		fn.setEnabled(false);
+		contentPane.add(random, "cell 2 4,alignx center");
+		
+//Tabela Regras e pesos associados
+		
+		Object[][] rules = new Object[][] {
+            {"T_LOTS_OF_MONEY", 4 },
+            {"HTML_IMAGE_RATIO_04", 2},
+            {"NORMAL_HTTP_TO_IP",3},
+            {"SUBJECT_NEEDS_ENCODING",1},
+            {"LOW_PRICE",5},
+            {"T_LOTS_OF_MONEY", 4 },
+            {"HTML_IMAGE_RATIO_04", 2},
+            {"NORMAL_HTTP_TO_IP",3},
+            {"SUBJECT_NEEDS_ENCODING",1},
+            {"LOW_PRICE",5},
+            {"T_LOTS_OF_MONEY", 4 },
+            {"HTML_IMAGE_RATIO_04", 2},
+            {"NORMAL_HTTP_TO_IP",3},
+            {"SUBJECT_NEEDS_ENCODING",1},
+            {"LOW_PRICE",5},
+        };
+        String [] colunas = new String[] {"Regras" , "Peso"};
+        
+     	DefaultTableModel model = new DefaultTableModel(rules, colunas);  
+     	table= new JTable(model);
+		table.setCellSelectionEnabled(true);
+		table.setBorder(new LineBorder(new Color(0, 0, 0)));
+		table.getTableHeader().setFont(f2);
+		table.getColumnModel().getColumn(0).setPreferredWidth(500);
+		table.getTableHeader().setBackground(Color.WHITE);
+		table.setRowHeight(25);
+		table.setFont(f2);
+		DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+		renderer.setHorizontalAlignment(SwingConstants.CENTER);
+		table.getColumnModel().getColumn(1).setCellRenderer(renderer);
+		scroll = new JScrollPane(table);
+		contentPane.add(scroll, "cell 0 2 2 5,grow");
+		
+//Botao Algoritmo
+		
+		JButton algoritmo = new JButton("Algoritmo");
+		algoritmo.setMinimumSize(new Dimension(140, 60));;
+		algoritmo.setFont(f);
+		contentPane.add(algoritmo, "cell 4 4,alignx center");
+
+//Botao Iniciar
+		
+		JButton iniciar = new JButton("Iniciar");
+		iniciar.setMinimumSize(new Dimension(140, 60));;
+		iniciar.setFont(f);
+		iniciar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		contentPane.add(iniciar, "cell 2 5 3 1,alignx center");
 		
 	}
 
