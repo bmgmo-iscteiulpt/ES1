@@ -35,7 +35,7 @@ public class GUI {
 	private Controller controller = new Controller();
 	private JFrame janelaPrincipal;
 	private JPanel painel;
-	static final double fator = 0.5;
+	static final double fator = 1;
 	private static Font f = new Font("Century Gothic", Font.PLAIN, 18);
 	private static Font f2 = new Font("Century Gothic", Font.PLAIN, 16);
 	private static Font f3 = new Font("Century Gothic", Font.BOLD, 20);
@@ -45,8 +45,6 @@ public class GUI {
 	private JTable table;
 	private JScrollPane scroll;
 	final JFileChooser fc = new JFileChooser();
-	private String[][] dados;
-	private DefaultTableModel model;
 	private String[] colunas;
 	private int botao = 0;
 
@@ -61,7 +59,7 @@ public class GUI {
 		janelaPrincipal = new JFrame("AntiSpammers");
 		janelaPrincipal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		janelaPrincipal.setBounds(0, 0, (int) (screenSize.height * fator * 1.5625), (int) (screenSize.height * fator));
+		janelaPrincipal.setBounds(0, 0, (int) (960 * fator), (int) (540 * fator));
 		System.out.println(screenSize.width * fator + "X" + screenSize.height * fator);
 		painel = new JPanel();
 		painel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -220,10 +218,15 @@ public class GUI {
 		random.setFont(f);
 		random.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(controller.ficheirosDef()) {
 				controller.pesosAleatorios();
 				setTable();
 				addinfo("Pesos aleatórios gerados");
 				botao = 1;
+				}
+				else {
+					addinfo("Verifique os caminhos dos ficheiros");
+				}		
 			}
 		});
 
