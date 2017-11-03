@@ -27,7 +27,7 @@ import javax.swing.border.LineBorder;
 
 public class GUI extends JFrame {
 
-	private JPanel contentPane;
+	private JPanel painel;
 	static final double fator=0.5;
 	private static Font f =new Font("Century Gothic", Font.PLAIN,18);
 	private static Font f2 =new Font("Century Gothic", Font.PLAIN,16);
@@ -80,10 +80,10 @@ public class GUI extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setBounds(0,0,(int) (screenSize.width*fator),(int) (screenSize.height*fator));
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(new MigLayout("", "[grow][grow][grow][][grow]", "[100px][100px][][][250px][100px][][]"));
+		painel = new JPanel();
+		painel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(painel);
+		painel.setLayout(new MigLayout("", "[grow][grow][grow][][grow]", "[100px][100px][][][250px][100px][][]"));
 		setResizable(false);
 		setLocationRelativeTo(null);
 		
@@ -92,12 +92,12 @@ public class GUI extends JFrame {
 		info = new JTextField();
 		info.setMinimumSize(new Dimension(400, 40));	
 		info.setFont(f);
-		contentPane.add(info, "cell 0 0 2 1,alignx center");
+		painel.add(info, "cell 0 0 2 1,alignx center");
 		info.setColumns(10);
 		info.setEnabled(false);
 		
 		JLabel regras = new JLabel("Regras e pesos respetivos");
-		contentPane.add(regras, "cell 0 1 2 1,alignx center");
+		painel.add(regras, "cell 0 1 2 1,alignx center");
 		regras.setFont(f);
 		
 // Botões 
@@ -113,28 +113,28 @@ public class GUI extends JFrame {
 //FP e FN
        		
 		JLabel falsospositivos = new JLabel("Falsos Positivos");
-		contentPane.add(falsospositivos, "cell 2 0 1 2,alignx center");
+		painel.add(falsospositivos, "cell 2 0 1 2,alignx center");
 		falsospositivos.setFont(f);
 		
 		
 		JLabel falsosnegativos = new JLabel("Falsos Negativos");
-		contentPane.add(falsosnegativos, "cell 4 0 1 2,alignx center");
+		painel.add(falsosnegativos, "cell 4 0 1 2,alignx center");
 		falsosnegativos.setFont(f);
 		
 		fp = new JTextField();
-		contentPane.add(fp, "cell 2 2,alignx center,aligny center");
+		painel.add(fp, "cell 2 2,alignx center,aligny center");
 		fp.setColumns(5);
 		fp.setMinimumSize(new Dimension(75, 75));
 		fp.setFont(f);
 		fp.setEnabled(false);
 		
 		fn = new JTextField();
-		contentPane.add(fn, "cell 4 2,alignx center");
+		painel.add(fn, "cell 4 2,alignx center");
 		fn.setColumns(5);
 		fn.setMinimumSize(new Dimension(75, 75));
 		fn.setFont(f);
 		fn.setEnabled(false);
-		contentPane.add(random, "cell 2 4,alignx center");
+		painel.add(random, "cell 2 4,alignx center");
 		
 //Tabela Regras e pesos associados
 		
@@ -170,14 +170,14 @@ public class GUI extends JFrame {
 		renderer.setHorizontalAlignment(SwingConstants.CENTER);
 		table.getColumnModel().getColumn(1).setCellRenderer(renderer);
 		scroll = new JScrollPane(table);
-		contentPane.add(scroll, "cell 0 2 2 5,grow");
+		painel.add(scroll, "cell 0 2 2 5,grow");
 		
 //Botao Algoritmo
 		
 		JButton algoritmo = new JButton("Algoritmo");
 		algoritmo.setMinimumSize(new Dimension(140, 60));;
 		algoritmo.setFont(f);
-		contentPane.add(algoritmo, "cell 4 4,alignx center");
+		painel.add(algoritmo, "cell 4 4,alignx center");
 
 //Botao Iniciar
 		
@@ -188,7 +188,7 @@ public class GUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		contentPane.add(iniciar, "cell 2 5 3 1,alignx center");
+		painel.add(iniciar, "cell 2 5 3 1,alignx center");
 		
 	}
 
