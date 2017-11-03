@@ -2,6 +2,7 @@ package antiSpamFilter;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FileDialog;
 import java.awt.Font;
 import java.awt.Toolkit;
 
@@ -23,6 +24,8 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FilenameFilter;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.border.LineBorder;
@@ -53,7 +56,8 @@ public class GUI {
 		janelaPrincipal = new JFrame("AntiSpammers");
 		janelaPrincipal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		janelaPrincipal.setBounds(0,0,(int) (screenSize.width*fator),(int) (screenSize.height*fator));
+		janelaPrincipal.setBounds(0,0,(int) (screenSize.height*fator*1.5625),(int) (screenSize.height*fator));
+		System.out.println(screenSize.width*fator +"X"+screenSize.height*fator);
 		painel = new JPanel();
 		painel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		janelaPrincipal.setContentPane(painel);
@@ -91,33 +95,44 @@ public class GUI {
 		janelaPrincipal.setJMenuBar(menuBar);
 		
 // Listener Menu
+		
 		rules_cf.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-			        int returnVal = fc.showOpenDialog(janelaPrincipal);
-			        if (returnVal == JFileChooser.APPROVE_OPTION) {
+				FileDialog dialog = new FileDialog(janelaPrincipal,"Selecione o caminho para o ficheiro rules.cf");
+			    dialog.setMode(FileDialog.LOAD);
+			    dialog.setFile("*.txt");
+			    dialog.setVisible(true);
+			    String file = dialog.getFile();
+			    if(file!=null)  
 			          info.setText("Caminho para o ficheiro rules.cf definido");
-			        }
 			}
 		});
 		
 		ham_txt.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-			        int returnVal = fc.showOpenDialog(janelaPrincipal);
-			        if (returnVal == JFileChooser.APPROVE_OPTION) {
+				FileDialog dialog = new FileDialog(janelaPrincipal,"Selecione o caminho para o ficheiro ham.txt");
+			    dialog.setMode(FileDialog.LOAD);
+			    dialog.setFile("*.txt");
+			    dialog.setVisible(true);
+			    String file = dialog.getFile();
+			    if(file!=null)  
 			          info.setText("Caminho para o ficheiro ham.txt definido");
-			        }
+			        
 			}
 		});
 
 		spam_txt.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-			        int returnVal = fc.showOpenDialog(janelaPrincipal);
-			        if (returnVal == JFileChooser.APPROVE_OPTION) {
-			          info.setText("Caminho para o ficheiro spam.txt definido");
-			        }
+				FileDialog dialog = new FileDialog(janelaPrincipal,"Selecione o caminho para o ficheiro spam.txt");
+			    dialog.setMode(FileDialog.LOAD);
+			    dialog.setFile("*.txt");
+			    dialog.setVisible(true);
+			    String file = dialog.getFile();
+			    if(file!=null)  
+			    	info.setText("Caminho para o ficheiro spam.txt definido");
 			}
 		});
 		
