@@ -17,12 +17,20 @@ public class Controller {
 	private ArrayList<Rule> rules;
 	private ArrayList<Email> ham;
 	private ArrayList<Email> spam;
-
-	public Controller() {
+	private static Controller instance = null;
+	
+	protected Controller() {
 		this.rules = new ArrayList<>();
 		this.ham = new ArrayList<>();
 		this.spam = new ArrayList<>();
-	}
+	   }
+	   public static Controller getInstance() {
+	      if(instance == null) {
+	         instance = new Controller();
+	         
+	      }
+	      return instance;
+	   }
 
 	// Definição caminho do ficheiro rules.cf
 
@@ -54,13 +62,30 @@ public class Controller {
 				rules.add(r);
 				linha = leitor.readLine();
 			}
-			System.out.println("Regras lidas");
+			System.out.println("Regras lidas"+ rules.size());
 			ficheiro.close();
 		} catch (IOException e) {
 			System.err.printf("Erro na abertura do arquivo: %s.\n", e.getMessage());
 		}
 	}
 
+	public void readNSGAII() {
+		try {
+			FileReader ficheiro = new FileReader("/experimentBaseDirectory/referenceFronts/AntiSpamFilterProblem.NSGAII.rs");
+			BufferedReader leitor = new BufferedReader(ficheiro);
+			String linha = leitor.readLine();
+			while (linha != null) {
+				Rule r = new Rule(linha);
+				rules.add(r);
+				linha = leitor.readLine();
+			}
+			System.out.println("Regras lidas"+ rules.size());
+			ficheiro.close();
+		} catch (IOException e) {
+			System.err.printf("Erro na abertura do arquivo: %s.\n", e.getMessage());
+		}
+	}
+	
 	// Leitura do ficheiro ham.txt, criação de Emails Ham e adição ao vetor
 
 	public void readHam() {
@@ -177,6 +202,11 @@ public class Controller {
 	public void pesosAleatorios() {
 		for(Rule r : rules) {
 			r.setPeso(ThreadLocalRandom.current().nextDouble(-5,5));
+		}
+	}
+	public void pesosAlgoritmo(double[] pesos) {
+		for(int i = 0 ; i < pesos.length ; i++) {
+			rules.get(i).setPeso(pesos[i]);
 		}
 	}
 	

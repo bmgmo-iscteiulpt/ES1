@@ -23,12 +23,12 @@ import java.util.List;
 
 public class AntiSpamFilterAutomaticConfiguration {
   private static final int INDEPENDENT_RUNS = 5 ;
-
-  public static void main(String[] args) throws IOException {
+  
+public static void main(String[] args) throws IOException {
     String experimentBaseDirectory = "experimentBaseDirectory";
 
     List<ExperimentProblem<DoubleSolution>> problemList = new ArrayList<>();
-    problemList.add(new ExperimentProblem<>(new AntiSpamFilterProblem(300)));
+    problemList.add(new ExperimentProblem<>(new AntiSpamFilterProblem(335)));
 
     List<ExperimentAlgorithm<DoubleSolution, List<DoubleSolution>>> algorithmList =
             configureAlgorithmList(problemList);
@@ -48,7 +48,7 @@ public class AntiSpamFilterAutomaticConfiguration {
 
     new ExecuteAlgorithms<>(experiment).run();
     new GenerateReferenceParetoSetAndFrontFromDoubleSolutions(experiment).run();
-    new ComputeQualityIndicators<>(experiment).run() ;
+//    new ComputeQualityIndicators<>(experiment).run() ;
     new GenerateLatexTablesWithStatistics(experiment).run() ;
     new GenerateBoxplotsWithR<>(experiment).setRows(1).setColumns(1).run() ;
     
