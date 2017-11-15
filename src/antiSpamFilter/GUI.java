@@ -1,6 +1,7 @@
 package antiSpamFilter;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.Font;
@@ -11,6 +12,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -20,19 +22,20 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.JLabel;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 
 import java.awt.event.ActionListener;
-
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.border.LineBorder;
 
 @SuppressWarnings("serial")
 public class GUI {
-	private Controller controller = new Controller();
+	private Controller controller = Controller.getInstance();
 	private JFrame janelaPrincipal;
 	private JPanel painel;
 	static final double fator = 1;
@@ -47,6 +50,7 @@ public class GUI {
 	final JFileChooser fc = new JFileChooser();
 	private String[] colunas;
 	private int botao = 0;
+	private JProgressBar pB;
 
 	public static void main(String[] args) {
 		GUI janela = new GUI();
@@ -160,7 +164,7 @@ public class GUI {
 		info.setEditable(false);
 		info.setBackground(Color.BLACK);
 		info.setHorizontalAlignment(SwingConstants.CENTER);
-
+		System.out.println(info.getBounds());
 		JLabel regras = new JLabel("Regras e pesos respetivos");
 		painel.add(regras, "cell 0 1 2 1,alignx center");
 		regras.setFont(f);
@@ -183,7 +187,6 @@ public class GUI {
 		fp.setEditable(false);
 		fp.setBackground(Color.WHITE);
 		fp.setHorizontalAlignment(SwingConstants.CENTER);
-		
 
 		fn = new JTextField();
 		painel.add(fn, "cell 4 2,alignx center");
@@ -198,6 +201,40 @@ public class GUI {
 
 		colunas = new String[] { "Regras", "Peso" };
 		table = new JTable();
+		table.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				System.out.println("A");
+
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				System.out.println("B");
+
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				System.out.println("C");
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				System.out.println(table.getModel().getValueAt(table.getSelectedRow(), 0));
+				System.out.println(table.getModel().getValueAt(table.getSelectedRow(), 1));
+
+			}
+		});
+		;
 		setTable();
 		scroll = new JScrollPane(table);
 		painel.add(scroll, "cell 0 2 2 5,grow");
@@ -208,6 +245,37 @@ public class GUI {
 		algoritmo.setMinimumSize(new Dimension(140, 60));
 		;
 		algoritmo.setFont(f);
+		algoritmo.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (controller.ficheirosDef()) {
+					addinfo("A gerar configuração ideal, aguarde...");
+					String[] args = {};
+					new Thread(new Runnable() {				
+									public void run() {
+										try {
+											janelaPrincipal.setEnabled(false);
+											new AntiSpamFilterAutomaticConfiguration();
+											AntiSpamFilterAutomaticConfiguration.main(args);
+											setTable();
+											janelaPrincipal.setEnabled(true);
+											addinfo("Pesos ideais gerados");
+											fp.setText(String.valueOf(controller.calcularFP()));
+											fn.setText(String.valueOf(controller.calcularFN()));
+											classificar("Leisure");
+										} catch (IOException e1) {
+											// TODO Auto-generated catch block
+											e1.printStackTrace();
+										}
+									}
+								}).start();
+				} else {
+					addinfo("Verifique os caminhos dos ficheiros");
+				}
+
+			}
+		});
 		painel.add(algoritmo, "cell 4 4,alignx center");
 
 		// Botão Aleatorio
@@ -218,15 +286,14 @@ public class GUI {
 		random.setFont(f);
 		random.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(controller.ficheirosDef()) {
-				controller.pesosAleatorios();
-				setTable();
-				addinfo("Pesos aleatórios gerados");
-				botao = 1;
-				}
-				else {
+				if (controller.ficheirosDef()) {
+					controller.pesosAleatorios();
+					setTable();
+					addinfo("Pesos aleatórios gerados");
+					botao = 1;
+				} else {
 					addinfo("Verifique os caminhos dos ficheiros");
-				}		
+				}
 			}
 		});
 
@@ -242,7 +309,7 @@ public class GUI {
 			public void actionPerformed(ActionEvent e) {
 
 				if (controller.ficheirosDef()) {
-					if(botao==1) {
+					if (botao == 1) {
 						controller.pesosAleatorios();
 						setTable();
 					}
@@ -255,14 +322,42 @@ public class GUI {
 			}
 
 		});
+
 		painel.add(iniciar, "cell 2 5 3 1,alignx center");
+
+		pB = new JProgressBar();
+		pB.setStringPainted(true);
+		pB.setMinimumSize(new Dimension(400, 40));
+		pB.setFont(f.deriveFont(Font.BOLD));
+		pB.setForeground(Color.WHITE);
+		pB.setBackground(Color.BLACK);
 
 		janelaPrincipal.setVisible(true);
 
 		addinfo("Bem Vindo");
 	}
 
-	// Janela INFO
+	private void updatePB() {
+		new Thread(new Runnable() {
+
+			public void run() {
+				try {
+					painel.remove(info);
+					painel.add(pB, "cell 0 0 2 1,alignx center");
+					int i = 0;
+					while (i <= 100) {
+						pB.setValue(i);
+						i++;
+						Thread.sleep(1500);
+					}
+					painel.add(info);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
+	}
+	// Definições da tabela
 
 	private void setTable() {
 		table.setModel(new DefaultTableModel(controller.preencherTabela(), colunas));
@@ -281,27 +376,29 @@ public class GUI {
 		table.revalidate();
 	}
 
+	// Janela INFO
+
 	public void addinfo(String s) {
-		new Thread(new Runnable() {
-
-			public void run() {
-				try {
-					Thread.sleep(250);
-					info.setText(s);
-					if (s.equals("Bem Vindo")) {
-						Thread.sleep(1500);
-						info.setText("Defina os caminhos para os ficheiros");
-					} else {
-						Thread.sleep(4000);
-						info.setText("");
-					}
-
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}).start();
-
+//		new Thread(new Runnable() {
+//
+//			public void run() {
+//				try {
+//					Thread.sleep(250);
+//					info.setText(s);
+//					if (s.equals("Bem Vindo")) {
+//						Thread.sleep(1500);
+//						info.setText("Defina os caminhos para os ficheiros");
+//					} else {
+//						Thread.sleep(4000);
+//						info.setText("");
+//					}
+//
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		}).start();
+		info.setText(s);
 	}
 
 	private void classificar(String tipo) {
@@ -338,4 +435,5 @@ public class GUI {
 		}
 
 	}
+
 }

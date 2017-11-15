@@ -15,7 +15,7 @@ public class AntiSpamFilterProblem extends AbstractDoubleProblem {
 	  }
 
 	  public AntiSpamFilterProblem(Integer numberOfVariables) {
-		controller = new Controller().getInstance();
+		  controller = Controller.getInstance();
 	    setNumberOfVariables(numberOfVariables);
 	    setNumberOfObjectives(2);
 	    setName("AntiSpamFilterProblem");
@@ -33,17 +33,17 @@ public class AntiSpamFilterProblem extends AbstractDoubleProblem {
 	  }
 
 	  public void evaluate(DoubleSolution solution){
-		  
 	    double[] fx = new double[getNumberOfObjectives()];
-	    double[] pesos = new double[getNumberOfVariables()];
+	    double[] x = new double[getNumberOfVariables()];
 	    for (int i = 0; i < solution.getNumberOfVariables(); i++) {
-	      pesos[i] = solution.getVariableValue(i) ;
+	      x[i] = solution.getVariableValue(i) ;
 	    }
-	    controller.pesosAlgoritmo(pesos);
-	    
-	    fx[0] = controller.calcularFN();
 
-	    fx[1] = controller.calcularFP();
+	    controller.pesosAlgoritmo(x);
+	   
+	    fx[0] = controller.calcularFP();
+
+	    fx[1] = controller.calcularFN();
 
 	    solution.setObjective(0, fx[0]);
 	    solution.setObjective(1, fx[1]);
