@@ -1,11 +1,9 @@
 package antiSpamFilter;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.Font;
-import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -33,7 +31,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.border.LineBorder;
 
-@SuppressWarnings("serial")
 public class GUI {
 	private Controller controller = Controller.getInstance();
 	private JFrame janelaPrincipal;
@@ -51,10 +48,7 @@ public class GUI {
 	private String[] colunas;
 	private int botao = 0;
 	private JProgressBar pB;
-
-	public static void main(String[] args) {
-		GUI janela = new GUI();
-	}
+	private boolean running =false;
 
 	// FRAME
 
@@ -62,9 +56,7 @@ public class GUI {
 		// configuração da janela
 		janelaPrincipal = new JFrame("AntiSpammers");
 		janelaPrincipal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		janelaPrincipal.setBounds(0, 0, (int) (960 * fator), (int) (540 * fator));
-		System.out.println(screenSize.width * fator + "X" + screenSize.height * fator);
 		painel = new JPanel();
 		painel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		janelaPrincipal.setContentPane(painel);
@@ -128,6 +120,7 @@ public class GUI {
 				dialog.setFile("*.txt");
 				dialog.setVisible(true);
 				String file = dialog.getDirectory() + dialog.getFile();
+				System.out.println(dialog.getDirectory());
 				if (file != null) {
 					addinfo("Caminho para o ficheiro ham.txt definido");
 					controller.setHamPath(file);
@@ -164,7 +157,6 @@ public class GUI {
 		info.setEditable(false);
 		info.setBackground(Color.BLACK);
 		info.setHorizontalAlignment(SwingConstants.CENTER);
-		System.out.println(info.getBounds());
 		JLabel regras = new JLabel("Regras e pesos respetivos");
 		painel.add(regras, "cell 0 1 2 1,alignx center");
 		regras.setFont(f);
@@ -250,20 +242,30 @@ public class GUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (controller.ficheirosDef()) {
-					addinfo("A gerar configuração ideal, aguarde...");
+					
 					String[] args = {};
+					
 					new Thread(new Runnable() {				
 									public void run() {
 										try {
+											
 											janelaPrincipal.setEnabled(false);
+											long startTime = System.currentTimeMillis();
+											running=true;
+											addinfo("A gerar configuração ideal, aguarde...");
 											new AntiSpamFilterAutomaticConfiguration();
 											AntiSpamFilterAutomaticConfiguration.main(args);
-											setTable();
-											janelaPrincipal.setEnabled(true);
+											running=false;
 											addinfo("Pesos ideais gerados");
+											long stopTime = System.currentTimeMillis();
+											long elapsedTime = stopTime - startTime;
+											System.out.println("Tempo de processamento: "+elapsedTime);
+											controller.readNSGAII();
+											setTable();
+											janelaPrincipal.setEnabled(true);		
 											fp.setText(String.valueOf(controller.calcularFP()));
 											fn.setText(String.valueOf(controller.calcularFN()));
-											classificar("Leisure");
+											//controller.stats();
 										} catch (IOException e1) {
 											// TODO Auto-generated catch block
 											e1.printStackTrace();
@@ -335,27 +337,19 @@ public class GUI {
 		janelaPrincipal.setVisible(true);
 
 		addinfo("Bem Vindo");
+		tryinit();
 	}
 
-	private void updatePB() {
-		new Thread(new Runnable() {
+	
 
-			public void run() {
-				try {
-					painel.remove(info);
-					painel.add(pB, "cell 0 0 2 1,alignx center");
-					int i = 0;
-					while (i <= 100) {
-						pB.setValue(i);
-						i++;
-						Thread.sleep(1500);
-					}
-					painel.add(info);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}).start();
+	private void tryinit() {
+		controller.setRulesPath("rules.cf");
+		controller.readRules();
+		setTable();
+		controller.setHamPath("ham.log.txt");
+		controller.readHam();
+		controller.setSpamPath("spam.log.txt");
+		controller.readSpam();
 	}
 	// Definições da tabela
 
@@ -379,26 +373,37 @@ public class GUI {
 	// Janela INFO
 
 	public void addinfo(String s) {
-//		new Thread(new Runnable() {
-//
-//			public void run() {
-//				try {
-//					Thread.sleep(250);
-//					info.setText(s);
-//					if (s.equals("Bem Vindo")) {
-//						Thread.sleep(1500);
-//						info.setText("Defina os caminhos para os ficheiros");
-//					} else {
-//						Thread.sleep(4000);
-//						info.setText("");
-//					}
-//
-//				} catch (InterruptedException e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		}).start();
-		info.setText(s);
+		new Thread(new Runnable() {
+
+			public void run() {
+				try {
+					if (s.equals("Bem Vindo")) {
+						info.setText("Bem Vindo");
+						Thread.sleep(1500);
+						if(!controller.ficheirosDef())
+						info.setText("Defina os caminhos para os ficheiros");
+					}
+					else if(s.equals("A gerar configuração ideal, aguarde...")) {
+						while(running) {
+							info.setText("A gerar configuração ideal, aguarde.");
+							Thread.sleep(500);
+							info.setText("A gerar configuração ideal, aguarde..");
+							Thread.sleep(500);
+							info.setText("A gerar configuração ideal, aguarde...");
+							Thread.sleep(500);
+						}
+												
+					}
+					else {
+						info.setText(s);
+					}
+
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
+		//info.setText(s);
 	}
 
 	private void classificar(String tipo) {
