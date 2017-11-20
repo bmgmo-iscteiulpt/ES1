@@ -8,6 +8,10 @@ import org.uma.jmetal.solution.DoubleSolution;
 
 public class AntiSpamFilterProblem extends AbstractDoubleProblem {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Controller controller;
 	  public AntiSpamFilterProblem() {
 	    // 10 variables (anti-spam filter rules) by default 
@@ -33,6 +37,9 @@ public class AntiSpamFilterProblem extends AbstractDoubleProblem {
 	  }
 
 	  public void evaluate(DoubleSolution solution){
+		
+		  controller.count();
+		    
 	    double[] fx = new double[getNumberOfObjectives()];
 	    double[] x = new double[getNumberOfVariables()];
 	    for (int i = 0; i < solution.getNumberOfVariables(); i++) {
@@ -44,7 +51,7 @@ public class AntiSpamFilterProblem extends AbstractDoubleProblem {
 	    fx[0] = controller.calcularFP();
 
 	    fx[1] = controller.calcularFN();
-
+	    
 	    solution.setObjective(0, fx[0]);
 	    solution.setObjective(1, fx[1]);
 	  }

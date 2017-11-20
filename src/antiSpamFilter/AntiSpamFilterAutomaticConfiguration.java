@@ -48,7 +48,7 @@ public static void main(String[] args) throws IOException {
 
     new ExecuteAlgorithms<>(experiment).run();
     new GenerateReferenceParetoSetAndFrontFromDoubleSolutions(experiment).run();
- //   new ComputeQualityIndicators<>(experiment).run() ;
+//   new ComputeQualityIndicators<>(experiment).run() ;
     new GenerateLatexTablesWithStatistics(experiment).run() ;
     new GenerateBoxplotsWithR<>(experiment).setRows(1).setColumns(1).run() ;
     

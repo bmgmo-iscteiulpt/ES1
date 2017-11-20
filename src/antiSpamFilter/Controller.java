@@ -20,11 +20,13 @@ public class Controller {
 	private ArrayList<Email> ham;
 	private ArrayList<Email> spam;
 	private static Controller instance = null;
+	private int count;
 
 	protected Controller() {
 		this.rules = new ArrayList<>();
 		this.ham = new ArrayList<>();
 		this.spam = new ArrayList<>();
+		this.count=0;
 	}
 
 	public static Controller getInstance() {
@@ -177,6 +179,7 @@ public class Controller {
 
 	// Consulta do peso de uma determinada regra
 	int a = 0;
+	
 
 	public double getPeso(String rule) {
 		a++;
@@ -255,4 +258,15 @@ public class Controller {
 		System.out.println("Função getPeso executada " + a + " vezes");
 		System.out.println("Função getPeso executada " + a + " vezes");
 	}
+
+	public void count() {
+		count++;
+		
+	}
+
+	public String getCount() {
+		int a = count/1250;
+		return a+"%";
+	}
+	
 }

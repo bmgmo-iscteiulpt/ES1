@@ -250,16 +250,12 @@ public class GUI {
 										try {
 											
 											janelaPrincipal.setEnabled(false);
-											long startTime = System.currentTimeMillis();
 											running=true;
 											addinfo("A gerar configuração ideal, aguarde...");
 											new AntiSpamFilterAutomaticConfiguration();
 											AntiSpamFilterAutomaticConfiguration.main(args);
 											running=false;
 											addinfo("Pesos ideais gerados");
-											long stopTime = System.currentTimeMillis();
-											long elapsedTime = stopTime - startTime;
-											System.out.println("Tempo de processamento: "+elapsedTime);
 											controller.readNSGAII();
 											setTable();
 											janelaPrincipal.setEnabled(true);		
@@ -385,11 +381,7 @@ public class GUI {
 					}
 					else if(s.equals("A gerar configuração ideal, aguarde...")) {
 						while(running) {
-							info.setText("A gerar configuração ideal, aguarde.");
-							Thread.sleep(500);
-							info.setText("A gerar configuração ideal, aguarde..");
-							Thread.sleep(500);
-							info.setText("A gerar configuração ideal, aguarde...");
+							info.setText("A gerar configuração ideal, aguarde  "+controller.getCount());
 							Thread.sleep(500);
 						}
 												
