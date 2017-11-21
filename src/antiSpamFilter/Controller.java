@@ -187,16 +187,16 @@ public class Controller {
 		int falsosPositivos = 0;
 
 		for (Email e : ham) {
-			int somatório = 0;
+			int somatorio = 0;
 
 //			for (String regra : e.getRules()) {
 //				somatório += getPeso(regra);
 //			}
 			
 			for (int index : e.getRulesIndex()) {
-				somatório += rules.get(index).getPeso();
+				somatorio += rules.get(index).getPeso();
 			}
-			if (somatório > 5)
+			if (somatorio > 5)
 				falsosPositivos++;
 		}
 		return falsosPositivos;
@@ -209,15 +209,15 @@ public class Controller {
 		int falsosNegativos = 0;
 
 		for (Email e : spam) {
-			int somatório = 0;
+			int somatorio = 0;
 
 //			for (String regra : e.getRules()) {
 //				somatório += getPeso(regra);
 //			}
 			for (int index : e.getRulesIndex()) {
-				somatório += rules.get(index).getPeso();
+				somatorio += rules.get(index).getPeso();
 			}
-			if (somatório <= 5)
+			if (somatorio <= 5)
 				falsosNegativos++;
 		}
 		return falsosNegativos;
