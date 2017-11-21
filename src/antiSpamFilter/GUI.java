@@ -48,12 +48,12 @@ public class GUI {
 	private String[] colunas;
 	private int botao = 0;
 	private JProgressBar pB;
-	private boolean running =false;
+	private boolean running = false;
 
 	// FRAME
 
 	public GUI() {
-		// configuração da janela
+		// configuração da janela-------------------------------------------------
 		janelaPrincipal = new JFrame("AntiSpammers");
 		janelaPrincipal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		janelaPrincipal.setBounds(0, 0, (int) (960 * fator), (int) (540 * fator));
@@ -64,8 +64,7 @@ public class GUI {
 		janelaPrincipal.setResizable(false);
 		janelaPrincipal.setLocationRelativeTo(null);
 
-		// MENU
-
+		// MENU-------------------------------------------------------------------
 		JMenuBar menuBar = new JMenuBar();
 		JMenu ficheiros = new JMenu("Ficheiros");
 		JMenu guardar = new JMenu("Guardar configuração");
@@ -93,8 +92,8 @@ public class GUI {
 
 		janelaPrincipal.setJMenuBar(menuBar);
 
-		// Listener Menu
-
+		// Listener Menu-----------------------------------------------
+		
 		rules_cf.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -146,7 +145,7 @@ public class GUI {
 			}
 		});
 
-		// Info e titulo da tabela
+		// Info e titulo da tabela---------------------------------------
 
 		info = new JTextField();
 		info.setMinimumSize(new Dimension(400, 40));
@@ -161,7 +160,7 @@ public class GUI {
 		painel.add(regras, "cell 0 1 2 1,alignx center");
 		regras.setFont(f);
 
-		// FP e FN
+		// FP e FN--------------------------------------------------------
 
 		JLabel falsospositivos = new JLabel("Falsos Positivos");
 		painel.add(falsospositivos, "cell 2 0 1 2,alignx center");
@@ -189,7 +188,7 @@ public class GUI {
 		fn.setBackground(Color.WHITE);
 		fn.setHorizontalAlignment(SwingConstants.CENTER);
 
-		// Tabela Regras e pesos associados
+		// Tabela Regras e pesos associados-----------------------------------
 
 		colunas = new String[] { "Regras", "Peso" };
 		table = new JTable();
@@ -231,7 +230,7 @@ public class GUI {
 		scroll = new JScrollPane(table);
 		painel.add(scroll, "cell 0 2 2 5,grow");
 
-		// Botao Algoritmo
+		// Botao Algoritmo (Thread que corre o algoritmo separadamente)------------------------
 
 		JButton algoritmo = new JButton("Algoritmo");
 		algoritmo.setMinimumSize(new Dimension(140, 60));
@@ -242,32 +241,32 @@ public class GUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (controller.ficheirosDef()) {
-					
+
 					String[] args = {};
-					
-					new Thread(new Runnable() {				
-									public void run() {
-										try {
-											
-											janelaPrincipal.setEnabled(false);
-											running=true;
-											addinfo("A gerar configuração ideal, aguarde...");
-											new AntiSpamFilterAutomaticConfiguration();
-											AntiSpamFilterAutomaticConfiguration.main(args);
-											running=false;
-											addinfo("Pesos ideais gerados");
-											controller.readNSGAII();
-											setTable();
-											janelaPrincipal.setEnabled(true);		
-											fp.setText(String.valueOf(controller.calcularFP()));
-											fn.setText(String.valueOf(controller.calcularFN()));
-											//controller.stats();
-										} catch (IOException e1) {
-											// TODO Auto-generated catch block
-											e1.printStackTrace();
-										}
-									}
-								}).start();
+
+					new Thread(new Runnable() {
+						public void run() {
+							try {
+
+								janelaPrincipal.setEnabled(false);
+								running = true;
+								addinfo("A gerar configuração ideal, aguarde...");
+								new AntiSpamFilterAutomaticConfiguration();
+								AntiSpamFilterAutomaticConfiguration.main(args);
+								running = false;
+								addinfo("Pesos ideais gerados");
+								controller.readNSGAII();
+								setTable();
+								janelaPrincipal.setEnabled(true);
+								fp.setText(String.valueOf(controller.calcularFP()));
+								fn.setText(String.valueOf(controller.calcularFN()));
+								// controller.stats();
+							} catch (IOException e1) {
+								System.out.println("Erro na thread do algoritmo");
+								e1.printStackTrace();
+							}
+						}
+					}).start();
 				} else {
 					addinfo("Verifique os caminhos dos ficheiros");
 				}
@@ -276,7 +275,7 @@ public class GUI {
 		});
 		painel.add(algoritmo, "cell 4 4,alignx center");
 
-		// Botão Aleatorio
+		// Botão Aleatorio ----------------------------------
 
 		JButton random = new JButton("Aleatório");
 		random.setMinimumSize(new Dimension(140, 60));
@@ -297,7 +296,7 @@ public class GUI {
 
 		painel.add(random, "cell 2 4,alignx center");
 
-		// Botao Iniciar
+		// Botao Iniciar---------------------------------------
 
 		JButton iniciar = new JButton("Iniciar");
 		iniciar.setMinimumSize(new Dimension(140, 60));
@@ -336,8 +335,7 @@ public class GUI {
 		tryinit();
 	}
 
-	
-
+	//Definir os caminhos dos ficheiros por defeito na localização do projeto----------------
 	private void tryinit() {
 		controller.setRulesPath("rules.cf");
 		controller.readRules();
@@ -347,7 +345,7 @@ public class GUI {
 		controller.setSpamPath("spam.log.txt");
 		controller.readSpam();
 	}
-	// Definições da tabela
+	// Definições da tabela-------------------------------------------------------------------
 
 	private void setTable() {
 		table.setModel(new DefaultTableModel(controller.preencherTabela(), colunas));
@@ -366,7 +364,7 @@ public class GUI {
 		table.revalidate();
 	}
 
-	// Janela INFO
+	// Janela INFO (Thread que altera a informação apresentada na janela INFO-----------------
 
 	public void addinfo(String s) {
 		new Thread(new Runnable() {
@@ -376,17 +374,15 @@ public class GUI {
 					if (s.equals("Bem Vindo")) {
 						info.setText("Bem Vindo");
 						Thread.sleep(1500);
-						if(!controller.ficheirosDef())
-						info.setText("Defina os caminhos para os ficheiros");
-					}
-					else if(s.equals("A gerar configuração ideal, aguarde...")) {
-						while(running) {
-							info.setText("A gerar configuração ideal, aguarde  "+controller.getCount());
+						if (!controller.ficheirosDef())
+							info.setText("Defina os caminhos para os ficheiros");
+					} else if (s.equals("A gerar configuração ideal, aguarde...")) {
+						while (running) {
+							info.setText("A gerar configuração ideal, aguarde  " + controller.getCount());
 							Thread.sleep(500);
 						}
-												
-					}
-					else {
+
+					} else {
 						info.setText(s);
 					}
 
@@ -395,9 +391,11 @@ public class GUI {
 				}
 			}
 		}).start();
-		//info.setText(s);
+		// info.setText(s);
 	}
-
+	
+//Função de classificação da configuração gerada
+	
 	private void classificar(String tipo) {
 		int total = controller.calcularFP() + controller.calcularFN();
 		if (tipo.equals("Leisure")) {

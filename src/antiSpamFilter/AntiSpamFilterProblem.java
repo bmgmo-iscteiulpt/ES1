@@ -37,7 +37,7 @@ public class AntiSpamFilterProblem extends AbstractDoubleProblem {
 	  }
 
 	  public void evaluate(DoubleSolution solution){
-		
+		//Conta 1 avaliação do algoritmo
 		  controller.count();
 		    
 	    double[] fx = new double[getNumberOfObjectives()];
@@ -45,7 +45,7 @@ public class AntiSpamFilterProblem extends AbstractDoubleProblem {
 	    for (int i = 0; i < solution.getNumberOfVariables(); i++) {
 	      x[i] = solution.getVariableValue(i) ;
 	    }
-
+	    //Define os pesos das regras para os dados pelo algoritmo
 	    controller.pesosAlgoritmo(x);
 	   
 	    fx[0] = controller.calcularFP();

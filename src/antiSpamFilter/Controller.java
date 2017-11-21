@@ -9,8 +9,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
-import javax.management.StringValueExp;
-
 public class Controller {
 
 	private String rulesPath;
@@ -29,6 +27,7 @@ public class Controller {
 		this.count=0;
 	}
 
+	// Controller definido como singleton
 	public static Controller getInstance() {
 		if (instance == null) {
 			instance = new Controller();
@@ -38,25 +37,21 @@ public class Controller {
 	}
 
 	// Definição caminho do ficheiro rules.cf
-
 	public void setRulesPath(String path) {
 		this.rulesPath = path;
 	}
 
 	// Definição caminho do ficheiro ham.txt
-
 	public void setHamPath(String path) {
 		this.hamPath = path;
 	}
 
 	// Definição caminho do ficheiro spam.txt
-
 	public void setSpamPath(String path) {
 		this.spamPath = path;
 	}
 
 	// Leitura do ficheiro rules.cf, criação de Rules e adição ao vetor
-
 	public void readRules() {
 		try {
 			rules.clear();
@@ -75,6 +70,7 @@ public class Controller {
 		}
 	}
 
+	//Leitura dos pesos gerados pelo algoritmo
 	public void readNSGAII() {
 		try {
 			String currentDirectory = new File("").getAbsolutePath();
@@ -93,7 +89,6 @@ public class Controller {
 	}
 
 	// Leitura do ficheiro ham.txt, criação de Emails Ham e adição ao vetor
-
 	public void readHam() {
 		try {
 			ham.clear();
@@ -127,7 +122,6 @@ public class Controller {
 	}
 
 	// Leitura do ficheiro spam.txt, criação de Emails Spam e adição ao vetor
-
 	public void readSpam() {
 		try {
 			spam.clear();
@@ -158,7 +152,6 @@ public class Controller {
 	}
 
 	// Preenchimento da tabela das regras
-
 	public String[][] preencherTabela() {
 		if (rules.isEmpty()) {
 			String[][] dados = new String[][] {};
@@ -178,21 +171,18 @@ public class Controller {
 	}
 
 	// Consulta do peso de uma determinada regra
-	int a = 0;
 	
-
-	public double getPeso(String rule) {
-		a++;
-		for (Rule r : rules) {
-			if (r.getName().equals(rule))
-				return r.getPeso();
-		}
-		return 0;
-	}
+//	public double getPeso(String rule) {
+//		a++;
+//		for (Rule r : rules) {
+//			if (r.getName().equals(rule))
+//				return r.getPeso();
+//		}
+//		return 0;
+//	}
 
 	// Cálculo de Falsos Positivos recorrendo aos emails Ham considerados SPAM (
 	// somatório > 5)
-
 	public int calcularFP() {
 		int falsosPositivos = 0;
 
@@ -215,7 +205,6 @@ public class Controller {
 
 	// Cálculo de Falsos Negativos recorrendo aos emails Spam considerados HAM (
 	// somatório < 5)
-
 	public int calcularFN() {
 		int falsosNegativos = 0;
 
@@ -234,18 +223,21 @@ public class Controller {
 		return falsosNegativos;
 	}
 
+	//Gerador de pesos aleatórios entre -5 e 5 para cada regra
 	public void pesosAleatorios() {
 		for (Rule r : rules) {
 			r.setPeso(ThreadLocalRandom.current().nextDouble(-5, 5));
 		}
 	}
 
+	// Atribuição dos pesos provenientes do vetor criado pelo algoritmo a cada regra
 	public void pesosAlgoritmo(double[] pesos) {
 		for (int i = 0; i < pesos.length; i++) {
 			rules.get(i).setPeso(pesos[i]);
 		}
 	}
 
+	//Verifica se os caminhos para os 3 ficheiros se encontra definido
 	public boolean ficheirosDef() {
 		if (rulesPath == null || hamPath == null || spamPath == null) {
 			return false;
@@ -254,16 +246,13 @@ public class Controller {
 		}
 	}
 
-	public void stats() {
-		System.out.println("Função getPeso executada " + a + " vezes");
-		System.out.println("Função getPeso executada " + a + " vezes");
-	}
-
+	//Conta o número de vezes que o algoritmo testou uma configuração diferente
 	public void count() {
 		count++;
 		
 	}
 
+	//Converte o número total de testes em percentagem para apresentação na GUI
 	public String getCount() {
 		int a = count/1250;
 		return a+"%";
