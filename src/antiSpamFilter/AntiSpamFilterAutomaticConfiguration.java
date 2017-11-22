@@ -48,7 +48,7 @@ public static void main(String[] args) throws IOException {
 
     new ExecuteAlgorithms<>(experiment).run();
     new GenerateReferenceParetoSetAndFrontFromDoubleSolutions(experiment).run();
-//   new ComputeQualityIndicators<>(experiment).run() ;
+   new ComputeQualityIndicators<>(experiment).run() ;
     new GenerateLatexTablesWithStatistics(experiment).run() ;
     new GenerateBoxplotsWithR<>(experiment).setRows(1).setColumns(1).run() ;
     
@@ -63,7 +63,8 @@ public static void main(String[] args) throws IOException {
               problemList.get(i).getProblem(),
               new SBXCrossover(1.0, 5),
               new PolynomialMutation(1.0 / problemList.get(i).getProblem().getNumberOfVariables(), 10.0))
-              .setMaxEvaluations(25000)
+              .setMaxEvaluations(1000)
+//PARA TESTE              .setMaxEvaluations(25000)
               .setPopulationSize(100)
               .build();
       algorithms.add(new ExperimentAlgorithm<>(algorithm, "NSGAII", problemList.get(i).getTag()));

@@ -24,7 +24,7 @@ public class Controller {
 		this.rules = new ArrayList<>();
 		this.ham = new ArrayList<>();
 		this.spam = new ArrayList<>();
-		this.count=0;
+		this.count = 0;
 	}
 
 	// Controller definido como singleton
@@ -70,13 +70,34 @@ public class Controller {
 		}
 	}
 
-	//Leitura dos pesos gerados pelo algoritmo
+	// Leitura dos pesos gerados pelo algoritmo
 	public void readNSGAII() {
 		try {
+			ArrayList<Double> FPs = new ArrayList<Double>();
+
 			String currentDirectory = new File("").getAbsolutePath();
-			FileReader ficheiro = new FileReader(currentDirectory+"/experimentBaseDirectory/referenceFronts/AntiSpamFilterProblem.NSGAII.rs");
+			FileReader ficheiro = new FileReader(currentDirectory+"/experimentBaseDirectory/referenceFronts/AntiSpamFilterProblem.NSGAII.rf");
 			BufferedReader leitor = new BufferedReader(ficheiro);
 			String linha = leitor.readLine();
+			while (linha != null) {
+				String[] tokens = linha.split(" ");
+				FPs.add(Double.valueOf(tokens[0]));
+				linha = leitor.readLine();
+			}
+			ficheiro.close();
+				double resultado=1000;
+				int index=0;
+			for(int i = 0; i < FPs.size(); i++) {
+				if(FPs.get(i)<resultado) {
+					resultado = FPs.get(i);
+					index = i;
+				}
+			}
+			
+			ficheiro = new FileReader(currentDirectory+"/experimentBaseDirectory/referenceFronts/AntiSpamFilterProblem.NSGAII.rs");
+			leitor = new BufferedReader(ficheiro);
+			for (int i = 0 ; i < index+1;i++)
+				linha = leitor.readLine();
 			String[] tokens = linha.split(" ");
 			for(int i = 0 ;i< tokens.length;i++) {
 				rules.get(i).setPeso(Double.valueOf(tokens[i]));
@@ -98,9 +119,9 @@ public class Controller {
 			while (linha != null) {
 				String[] tokens = linha.split("\\s+");
 				Email e = new Email(tokens[0]);
-//				for (int i = 1; i < tokens.length; i++) {
-//					e.addRule(tokens[i]);
-//				}
+				// for (int i = 1; i < tokens.length; i++) {
+				// e.addRule(tokens[i]);
+				// }
 				for (int i = 1; i < tokens.length; i++) {
 					for (int j = 0; j < rules.size(); j++) {
 						if (rules.get(j).getName().equals(tokens[i])) {
@@ -131,9 +152,9 @@ public class Controller {
 			while (linha != null) {
 				String[] tokens = linha.split("\\s+");
 				Email e = new Email(tokens[0]);
-//				for (int i = 1; i < tokens.length; i++) {
-//					e.addRule(tokens[i]);
-//				}
+				// for (int i = 1; i < tokens.length; i++) {
+				// e.addRule(tokens[i]);
+				// }
 				for (int i = 1; i < tokens.length; i++) {
 					for (int j = 0; j < rules.size(); j++) {
 						if (rules.get(j).getName().equals(tokens[i])) {
@@ -171,15 +192,15 @@ public class Controller {
 	}
 
 	// Consulta do peso de uma determinada regra
-	
-//	public double getPeso(String rule) {
-//		a++;
-//		for (Rule r : rules) {
-//			if (r.getName().equals(rule))
-//				return r.getPeso();
-//		}
-//		return 0;
-//	}
+
+	// public double getPeso(String rule) {
+	// a++;
+	// for (Rule r : rules) {
+	// if (r.getName().equals(rule))
+	// return r.getPeso();
+	// }
+	// return 0;
+	// }
 
 	// Cálculo de Falsos Positivos recorrendo aos emails Ham considerados SPAM (
 	// somatório > 5)
@@ -189,10 +210,10 @@ public class Controller {
 		for (Email e : ham) {
 			int somatorio = 0;
 
-//			for (String regra : e.getRules()) {
-//				somatório += getPeso(regra);
-//			}
-			
+			// for (String regra : e.getRules()) {
+			// somatório += getPeso(regra);
+			// }
+
 			for (int index : e.getRulesIndex()) {
 				somatorio += rules.get(index).getPeso();
 			}
@@ -211,9 +232,9 @@ public class Controller {
 		for (Email e : spam) {
 			int somatorio = 0;
 
-//			for (String regra : e.getRules()) {
-//				somatório += getPeso(regra);
-//			}
+			// for (String regra : e.getRules()) {
+			// somatório += getPeso(regra);
+			// }
 			for (int index : e.getRulesIndex()) {
 				somatorio += rules.get(index).getPeso();
 			}
@@ -223,7 +244,7 @@ public class Controller {
 		return falsosNegativos;
 	}
 
-	//Gerador de pesos aleatórios entre -5 e 5 para cada regra
+	// Gerador de pesos aleatórios entre -5 e 5 para cada regra
 	public void pesosAleatorios() {
 		for (Rule r : rules) {
 			r.setPeso(ThreadLocalRandom.current().nextDouble(-5, 5));
@@ -237,7 +258,7 @@ public class Controller {
 		}
 	}
 
-	//Verifica se os caminhos para os 3 ficheiros se encontra definido
+	// Verifica se os caminhos para os 3 ficheiros se encontra definido
 	public boolean ficheirosDef() {
 		if (rulesPath == null || hamPath == null || spamPath == null) {
 			return false;
@@ -246,16 +267,16 @@ public class Controller {
 		}
 	}
 
-	//Conta o número de vezes que o algoritmo testou uma configuração diferente
+	// Conta o número de vezes que o algoritmo testou uma configuração diferente
 	public void count() {
 		count++;
-		
+
 	}
 
-	//Converte o número total de testes em percentagem para apresentação na GUI
+	// Converte o número total de testes em percentagem para apresentação na GUI
 	public String getCount() {
-		int a = count/1250;
-		return a+"%";
+		int a = count / 1250;
+		return a + "%";
 	}
-	
+
 }
