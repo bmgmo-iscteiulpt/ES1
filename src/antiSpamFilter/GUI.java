@@ -272,15 +272,10 @@ public class GUI {
 		iniciar.setFont(f);
 		iniciar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
 				if (controller.ficheirosDef()) {
-					String[][] rules = controller.getDadosTabela();
 					fp.setText(String.valueOf(controller.calcularFP()));
 					fn.setText(String.valueOf(controller.calcularFN()));
 					classificar("Leisure");
-					for(int i = 0; i<10;i++) {
-						System.out.println(rules[i][1]);
-					}
 				} else {
 					addinfo("Verifique os caminhos dos ficheiros");
 				}

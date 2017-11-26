@@ -34,4 +34,8 @@ public class Email {
 		rulesIndex.add(j);
 		
 	}
+
+	public String getId() {
+		return id;
+	}
 }

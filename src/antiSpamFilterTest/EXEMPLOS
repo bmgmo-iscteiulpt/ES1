@@ -1,0 +1,30 @@
+Exemplos de Assertions
+
+
+
+assertArrayEquals("failure - byte arrays not same", expected, actual);
+
+assertEquals("failure - strings are not equal", "text", "text");
+
+assertFalse("failure - should be false", false);
+
+assertNotNull("should not be null", new Object());
+
+assertNotSame("should not be same Object", new Object(), new Object());
+
+ assertNull("should be null", null);
+ 
+ assertSame("should be same", aNumber, aNumber);
+ 
+ assertThat("albumen", both(containsString("a")).and(containsString("b")));
+ 
+ assertThat(Arrays.asList("one", "two", "three"), hasItems("one", "three"));
+ 
+ assertThat(Arrays.asList(new String[] { "fun", "ban", "net" }), everyItem(containsString("n")));
+ 
+ assertThat("good", allOf(equalTo("good"), startsWith("good")));
+ 
+ assertThat(new Object(), not(sameInstance(new Object())));
+ 
+ assertTrue("failure - should be true", true);
+ 

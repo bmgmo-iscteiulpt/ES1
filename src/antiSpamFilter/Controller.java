@@ -11,13 +11,13 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Controller {
 
+	private static Controller instance = null;
 	private String rulesPath;
 	private String hamPath;
 	private String spamPath;
 	private ArrayList<Rule> rules;
 	private ArrayList<Email> ham;
-	private ArrayList<Email> spam;
-	private static Controller instance = null;
+	private ArrayList<Email> spam;	
 	private int count;
 
 	protected Controller() {
@@ -31,7 +31,6 @@ public class Controller {
 	public static Controller getInstance() {
 		if (instance == null) {
 			instance = new Controller();
-
 		}
 		return instance;
 	}
@@ -84,15 +83,14 @@ public class Controller {
 				linha = leitor.readLine();
 			}
 			ficheiro.close();
-				double resultado=1000;
+				double resultado=0;
 				int index=0;
 			for(int i = 0; i < FPs.size(); i++) {
-				if(FPs.get(i)<resultado) {
+				if(FPs.get(i)>resultado) {
 					resultado = FPs.get(i);
 					index = i;
 				}
 			}
-			
 			ficheiro = new FileReader(currentDirectory+"/experimentBaseDirectory/referenceFronts/AntiSpamFilterProblem.NSGAII.rs");
 			leitor = new BufferedReader(ficheiro);
 			for (int i = 0 ; i < index+1;i++)
@@ -190,17 +188,6 @@ public class Controller {
 
 	}
 
-	// Consulta do peso de uma determinada regra
-
-	// public double getPeso(String rule) {
-	// a++;
-	// for (Rule r : rules) {
-	// if (r.getName().equals(rule))
-	// return r.getPeso();
-	// }
-	// return 0;
-	// }
-
 	// Cálculo de Falsos Positivos recorrendo aos emails Ham considerados SPAM (
 	// somatório > 5)
 	public int calcularFP() {
@@ -208,10 +195,6 @@ public class Controller {
 
 		for (Email e : ham) {
 			int somatorio = 0;
-
-			// for (String regra : e.getRules()) {
-			// somatório += getPeso(regra);
-			// }
 
 			for (int index : e.getRulesIndex()) {
 				somatorio += rules.get(index).getPeso();
@@ -231,9 +214,6 @@ public class Controller {
 		for (Email e : spam) {
 			int somatorio = 0;
 
-			// for (String regra : e.getRules()) {
-			// somatório += getPeso(regra);
-			// }
 			for (int index : e.getRulesIndex()) {
 				somatorio += rules.get(index).getPeso();
 			}
@@ -284,6 +264,14 @@ public class Controller {
 	public String getCount() {
 		int a = count / 1250;
 		return a + "%";
+	}
+
+	public ArrayList<Email> getHam() {
+		return ham;
+	}
+
+	public ArrayList<Email> getSpam() {
+		return spam;
 	}
 
 }
