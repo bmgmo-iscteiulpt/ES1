@@ -48,9 +48,9 @@ public class AntiSpamFilterProblem extends AbstractDoubleProblem {
 	    //Define os pesos das regras para os dados pelo algoritmo
 	    controller.pesosAlgoritmo(x);
 	   
-	    fx[0] = controller.calcularFP();
+	    fx[0] = controller.calcularFN();
 
-	    fx[1] = controller.calcularFN();
+	    fx[1] = controller.calcularFP();
 	    
 	    solution.setObjective(0, fx[0]);
 	    solution.setObjective(1, fx[1]);

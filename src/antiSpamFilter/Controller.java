@@ -63,7 +63,6 @@ public class Controller {
 				rules.add(r);
 				linha = leitor.readLine();
 			}
-			System.out.println("Regras lidas" + rules.size());
 			ficheiro.close();
 		} catch (IOException e) {
 			System.err.printf("Erro na abertura do arquivo: %s.\n", e.getMessage());
@@ -102,7 +101,6 @@ public class Controller {
 			for(int i = 0 ;i< tokens.length;i++) {
 				rules.get(i).setPeso(Double.valueOf(tokens[i]));
 			}
-			System.out.println("Regras lidas" + rules.size());
 			ficheiro.close();
 		} catch (IOException e) {
 			System.err.printf("Erro na abertura do arquivo: %s.\n", e.getMessage());
@@ -134,6 +132,7 @@ public class Controller {
 				linha = leitor.readLine();
 			}
 			System.out.println("Ham lido");
+		
 			ficheiro.close();
 		} catch (
 
@@ -173,7 +172,7 @@ public class Controller {
 	}
 
 	// Preenchimento da tabela das regras
-	public String[][] preencherTabela() {
+	public String[][] getDadosTabela() {
 		if (rules.isEmpty()) {
 			String[][] dados = new String[][] {};
 			return dados;
@@ -217,7 +216,7 @@ public class Controller {
 			for (int index : e.getRulesIndex()) {
 				somatorio += rules.get(index).getPeso();
 			}
-			if (somatorio > 5)
+			if (somatorio >= 5)
 				falsosPositivos++;
 		}
 		return falsosPositivos;
@@ -238,10 +237,14 @@ public class Controller {
 			for (int index : e.getRulesIndex()) {
 				somatorio += rules.get(index).getPeso();
 			}
-			if (somatorio <= 5)
+			if (somatorio < 5)
 				falsosNegativos++;
 		}
 		return falsosNegativos;
+	}
+
+	public ArrayList<Rule> getRules() {
+		return rules;
 	}
 
 	// Gerador de pesos aleatórios entre -5 e 5 para cada regra
@@ -249,6 +252,10 @@ public class Controller {
 		for (Rule r : rules) {
 			r.setPeso(ThreadLocalRandom.current().nextDouble(-5, 5));
 		}
+	}
+	
+	public void pesosManuais(int row, String value) {
+		rules.get(row).setPeso(Double.valueOf(value));
 	}
 
 	// Atribuição dos pesos provenientes do vetor criado pelo algoritmo a cada regra

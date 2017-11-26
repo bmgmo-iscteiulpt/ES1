@@ -1,5 +1,5 @@
 package antiSpamFilter;
-//ola bruno!
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FileDialog;
@@ -9,27 +9,30 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.JLabel;
+import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
-import javax.swing.border.LineBorder;
 
 public class GUI {
 	private Controller controller = Controller.getInstance();
@@ -43,13 +46,13 @@ public class GUI {
 	private JTextField fp;
 	private JTextField fn;
 	private JTable table;
+	private DefaultTableModel model;
 	private JScrollPane scroll;
 	final JFileChooser fc = new JFileChooser();
 	private String[] colunas;
-	private int botao = 0;
 	private JProgressBar pB;
 	private boolean running = false;
-
+	
 	// FRAME
 
 	public GUI() {
@@ -188,47 +191,10 @@ public class GUI {
 		fn.setBackground(Color.WHITE);
 		fn.setHorizontalAlignment(SwingConstants.CENTER);
 
+		tryinit();
 		// Tabela Regras e pesos associados-----------------------------------
 
-		colunas = new String[] { "Regras", "Peso" };
-		table = new JTable();
-		table.addMouseListener(new MouseListener() {
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				System.out.println("A");
-
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				System.out.println("B");
-
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				System.out.println("C");
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-
-			}
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				System.out.println(table.getModel().getValueAt(table.getSelectedRow(), 0));
-				System.out.println(table.getModel().getValueAt(table.getSelectedRow(), 1));
-
-			}
-		});
-		;
-		setTable();
-		scroll = new JScrollPane(table);
-		painel.add(scroll, "cell 0 2 2 5,grow");
+		criarTabela();
 
 		// Botao Algoritmo (Thread que corre o algoritmo separadamente)------------------------
 
@@ -260,7 +226,7 @@ public class GUI {
 								janelaPrincipal.setEnabled(true);
 								fp.setText(String.valueOf(controller.calcularFP()));
 								fn.setText(String.valueOf(controller.calcularFN()));
-								// controller.stats();
+								classificar("Leisure");
 							} catch (IOException e1) {
 								System.out.println("Erro na thread do algoritmo");
 								e1.printStackTrace();
@@ -283,11 +249,13 @@ public class GUI {
 		random.setFont(f);
 		random.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (controller.ficheirosDef()) {
+				if (controller.ficheirosDef()) {					
 					controller.pesosAleatorios();
 					setTable();
 					addinfo("Pesos aleatórios gerados");
-					botao = 1;
+					fp.setText(String.valueOf(controller.calcularFP()));
+					fn.setText(String.valueOf(controller.calcularFN()));
+					classificar("Leisure");
 				} else {
 					addinfo("Verifique os caminhos dos ficheiros");
 				}
@@ -296,23 +264,23 @@ public class GUI {
 
 		painel.add(random, "cell 2 4,alignx center");
 
-		// Botao Iniciar---------------------------------------
+		// Botao Manual---------------------------------------
 
-		JButton iniciar = new JButton("Iniciar");
+		JButton iniciar = new JButton("Manual");
 		iniciar.setMinimumSize(new Dimension(140, 60));
 		;
 		iniciar.setFont(f);
 		iniciar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				
 				if (controller.ficheirosDef()) {
-					if (botao == 1) {
-						controller.pesosAleatorios();
-						setTable();
-					}
+					String[][] rules = controller.getDadosTabela();
 					fp.setText(String.valueOf(controller.calcularFP()));
 					fn.setText(String.valueOf(controller.calcularFN()));
 					classificar("Leisure");
+					for(int i = 0; i<10;i++) {
+						System.out.println(rules[i][1]);
+					}
 				} else {
 					addinfo("Verifique os caminhos dos ficheiros");
 				}
@@ -332,36 +300,110 @@ public class GUI {
 		janelaPrincipal.setVisible(true);
 
 		addinfo("Bem Vindo");
-		tryinit();
+		
 	}
 
 	//Definir os caminhos dos ficheiros por defeito na localização do projeto----------------
 	private void tryinit() {
 		controller.setRulesPath("rules.cf");
 		controller.readRules();
-		setTable();
+	//	setTable();
 		controller.setHamPath("ham.log.txt");
 		controller.readHam();
 		controller.setSpamPath("spam.log.txt");
 		controller.readSpam();
 	}
+	
 	// Definições da tabela-------------------------------------------------------------------
+	private void criarTabela() {
+		colunas = new String[] { "Regras", "Peso" };
+		 model = new DefaultTableModel(controller.getDadosTabela(), colunas) {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
 
-	private void setTable() {
-		table.setModel(new DefaultTableModel(controller.preencherTabela(), colunas));
-		table.setCellSelectionEnabled(true);
-		table.setBorder(new LineBorder(new Color(0, 0, 0)));
+			public boolean isCellEditable(int rowIndex, int columnIndex) {
+				if(columnIndex==0)
+					return false;
+				else
+					return true;
+       }				
+		};	
+		
+		table = new JTable(model);
 		table.getTableHeader().setFont(f2);
-		table.getColumnModel().getColumn(0).setMinWidth(300);
 		table.getTableHeader().setBackground(Color.WHITE);
+		table.getColumnModel().getColumn(0).setMinWidth(300);
 		table.setRowHeight(25);
 		table.setFont(f2);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 		DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
 		renderer.setHorizontalAlignment(SwingConstants.CENTER);
 		table.getColumnModel().getColumn(1).setCellRenderer(renderer);
-		table.repaint();
-		table.revalidate();
+		JTextField cell = new JTextField();
+		DefaultCellEditor cellEditor = new DefaultCellEditor(cell);
+		 table.getColumnModel().getColumn(1).setCellEditor(cellEditor);
+	    cell.setBorder(new LineBorder(Color.BLACK));	   
+	    cell.setFont(f2);
+	    cell.setHorizontalAlignment(JTextField.CENTER);
+	    table.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), "startEditing");
+	    
+	    cell.addMouseListener(new MouseListener() {
+			String text;
+			@Override
+			public void mouseReleased(MouseEvent e) {
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				text= cell.getText();
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				table.getCellEditor().stopCellEditing();
+				int row = table.getSelectedRow();
+				boolean isNumeric = cell.getText().chars().allMatch( Character::isDigit );
+				if((isNumeric && Double.valueOf(cell.getText()) <=5) && (Double.valueOf(cell.getText()) >-5)) {
+					controller.pesosManuais(row, cell.getText());
+					System.out.println("editada "+row+" para "+cell.getText());	
+						
+				}
+				else {
+					System.out.println(text);
+					cell.setText(text);
+					setTable();
+					JOptionPane.showMessageDialog(janelaPrincipal,
+						    "Introduza um número entre -5 e 5 ",
+						    "Erro",
+						    JOptionPane.ERROR_MESSAGE);
+					
+				}
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				((JTextField)e.getSource()).selectAll();
+				//row = table.getSelectedRow();
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {				
+			}
+		});
+		scroll = new JScrollPane(table);
+		painel.add(scroll, "cell 0 2 2 5,grow");
+	}
+	
+	public void setTable() {
+		String[][] rules = controller.getDadosTabela();
+		for(int i = 0; i< rules.length;i++) {
+			model.setValueAt(rules[i][0],i , 0);
+			model.setValueAt(rules[i][1],i , 1);
+		}
+		
+		
 	}
 
 	// Janela INFO (Thread que altera a informação apresentada na janela INFO-----------------
@@ -400,35 +442,16 @@ public class GUI {
 		int total = controller.calcularFP() + controller.calcularFN();
 		if (tipo.equals("Leisure")) {
 			if (controller.calcularFP() < total * 0.20) {
-				fp.setForeground(Color.GREEN);
-				fn.setForeground(Color.GREEN);
-			} else if (controller.calcularFP() < total * 0.4 && controller.calcularFP() > total * 0.2) {
+				fp.setForeground(Color.RED);
+				fn.setForeground(Color.RED);
+			} else if (controller.calcularFP() < total * 0.7 && controller.calcularFP() > total * 0.2) {
 				fp.setForeground(Color.BLUE);
 				fn.setForeground(Color.BLUE);
 			} else {
-				fp.setForeground(Color.RED);
-				fn.setForeground(Color.RED);
-			}
-		} else if (tipo.equals("Professional")) {
-			if (controller.calcularFP() > total * 0.80) {
 				fp.setForeground(Color.GREEN);
 				fn.setForeground(Color.GREEN);
-			} else if (controller.calcularFP() > total * 0.6 && controller.calcularFP() < total * 0.8) {
-				fp.setForeground(Color.BLUE);
-				fn.setForeground(Color.BLUE);
-			} else {
-				fp.setForeground(Color.RED);
-				fn.setForeground(Color.RED);
-			}
-		} else if (tipo.equals("Leisure and Professional")) {
-			if (controller.calcularFP() > total * 0.45 && controller.calcularFP() < total * 0.55) {
-				fp.setForeground(Color.GREEN);
-				fn.setForeground(Color.GREEN);
-			} else if (controller.calcularFP() < total * 0.45 || controller.calcularFP() > total * 0.55) {
-				fp.setForeground(Color.BLUE);
 			}
 		}
-
 	}
 
 }
