@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.IOException;
+
 import org.junit.jupiter.api.Test;
 
 import antiSpamFilter.Controller;
@@ -37,13 +39,31 @@ class ControllerTest {
 
 	@Test
 	void testSetSpamPath() {
-		c.setHamPath("caminhoSPAM");
+		c.setSpamPath("caminhoSPAM");
 		assertEquals("failure - strings are not equal","caminhoSPAM",c.getSpamPath());
 	}
 
 	@Test
 	void testReadRules() {
-		fail("Not yet implemented"); // TODO
+		try{
+			c.readRules();
+		}
+		catch (Exception e) {
+		
+		}
+		try{
+			c.setRulesPath("rules.cf");
+			c.readRules();
+			assertNotNull("should not be null",c.getRules().get(0));
+			assertEquals("failure - strings are not equal","BAYES_00",c.getRules().get(0).getName());
+			assertEquals("failure - strings are not equal","0.0",String.valueOf(c.getRules().get(0).getPeso()));
+			
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		
 	}
 
 	@Test

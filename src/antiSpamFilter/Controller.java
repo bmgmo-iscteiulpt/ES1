@@ -52,8 +52,8 @@ public class Controller {
 
 	// Leitura do ficheiro rules.cf, criação de Rules e adição ao vetor
 	public void readRules() {
+		rules.clear();
 		try {
-			rules.clear();
 			FileReader ficheiro = new FileReader(this.rulesPath);
 			BufferedReader leitor = new BufferedReader(ficheiro);
 			String linha = leitor.readLine();
