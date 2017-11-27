@@ -20,22 +20,25 @@ class ControllerTest {
 
 	@Test
 	void testGetInstance() {
-		fail("Not yet implemented"); // TODO
+		assertNotNull("should not be null",c);
 	}
 
 	@Test
 	void testSetRulesPath() {
-		fail("Not yet implemented"); // TODO
+		c.setRulesPath("caminho");
+		assertEquals("failure - strings are not equal","caminho",c.getRulesPath());
 	}
 
 	@Test
 	void testSetHamPath() {
-		fail("Not yet implemented"); // TODO
+		c.setHamPath("caminhoHAM");
+		assertEquals("failure - strings are not equal","caminhoHAM",c.getHamPath());
 	}
 
 	@Test
 	void testSetSpamPath() {
-		fail("Not yet implemented"); // TODO
+		c.setHamPath("caminhoSPAM");
+		assertEquals("failure - strings are not equal","caminhoSPAM",c.getSpamPath());
 	}
 
 	@Test

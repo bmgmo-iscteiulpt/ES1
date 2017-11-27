@@ -139,6 +139,18 @@ public class Controller {
 		}
 	}
 
+	public String getRulesPath() {
+		return rulesPath;
+	}
+
+	public String getHamPath() {
+		return hamPath;
+	}
+
+	public String getSpamPath() {
+		return spamPath;
+	}
+
 	// Leitura do ficheiro spam.txt, criação de Emails Spam e adição ao vetor
 	public void readSpam() {
 		try {
