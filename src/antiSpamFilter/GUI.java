@@ -70,28 +70,32 @@ public class GUI {
 		// MENU-------------------------------------------------------------------
 		JMenuBar menuBar = new JMenuBar();
 		JMenu ficheiros = new JMenu("Ficheiros");
-		JMenu guardar = new JMenu("Guardar configuração");
+		JMenu opcoes = new JMenu("Opções");
 		JMenu historico = new JMenu("Histórico");
 
 		ficheiros.setFont(f2);
-		guardar.setFont(f2);
+		opcoes.setFont(f2);
 		historico.setFont(f2);
 
 		menuBar.add(ficheiros);
-		menuBar.add(guardar);
+		menuBar.add(opcoes);
 		menuBar.add(historico);
 
 		JMenuItem rules_cf = new JMenuItem("rules.cf");
 		JMenuItem ham_txt = new JMenuItem("ham.txt");
 		JMenuItem spam_txt = new JMenuItem("spam.txt");
+		JMenuItem guardar = new JMenuItem("Guardar configuração");
 
 		rules_cf.setFont(f2);
 		ham_txt.setFont(f2);
 		spam_txt.setFont(f2);
+		guardar.setFont(f2);
 
 		ficheiros.add(rules_cf);
 		ficheiros.add(ham_txt);
 		ficheiros.add(spam_txt);
+		
+		opcoes.add(guardar);
 
 		janelaPrincipal.setJMenuBar(menuBar);
 
@@ -147,7 +151,16 @@ public class GUI {
 				}
 			}
 		});
-
+		guardar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(controller.ficheirosDef())
+				controller.guardarPesos();
+				System.out.println("Action");
+				
+			}
+		});
 		// Info e titulo da tabela---------------------------------------
 
 		info = new JTextField();

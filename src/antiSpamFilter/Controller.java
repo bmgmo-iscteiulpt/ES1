@@ -2,13 +2,19 @@ package antiSpamFilter;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * @author bruno
+ *
+ */
 public class Controller {
 
 	private static Controller instance = null;
@@ -20,6 +26,9 @@ public class Controller {
 	private ArrayList<Email> spam;	
 	private int count;
 
+	/**
+	 * @
+	 */
 	protected Controller() {
 		this.rules = new ArrayList<>();
 		this.ham = new ArrayList<>();
@@ -28,6 +37,9 @@ public class Controller {
 	}
 
 	// Controller definido como singleton
+	/**
+	 * @return
+	 */
 	public static Controller getInstance() {
 		if (instance == null) {
 			instance = new Controller();
@@ -36,21 +48,33 @@ public class Controller {
 	}
 
 	// Definição caminho do ficheiro rules.cf
+	/**
+	 * @param path
+	 */
 	public void setRulesPath(String path) {
 		this.rulesPath = path;
 	}
 
 	// Definição caminho do ficheiro ham.txt
+	/**
+	 * @param path
+	 */
 	public void setHamPath(String path) {
 		this.hamPath = path;
 	}
 
 	// Definição caminho do ficheiro spam.txt
+	/**
+	 * @param path
+	 */
 	public void setSpamPath(String path) {
 		this.spamPath = path;
 	}
 
 	// Leitura do ficheiro rules.cf, criação de Rules e adição ao vetor
+	/**
+	 * 
+	 */
 	public void readRules() {
 		rules.clear();
 		try {
@@ -69,6 +93,9 @@ public class Controller {
 	}
 
 	// Leitura dos pesos gerados pelo algoritmo
+	/**
+	 * 
+	 */
 	public void readNSGAII() {
 		try {
 			ArrayList<Double> FPs = new ArrayList<Double>();
@@ -274,10 +301,23 @@ public class Controller {
 
 	// Converte o número total de testes em percentagem para apresentação na GUI
 	public String getCount() {
-		int a = count / 1250;
+		int a = count / 50
+				;
 		return a + "%";
 	}
 
+	public void guardarPesos() {
+		 try{
+	         FileOutputStream fos= new FileOutputStream("pesos.txt");
+	         ObjectOutputStream oos= new ObjectOutputStream(fos);
+	         oos.writeObject(rules);
+	         oos.close();
+	         fos.close();
+	       }catch(IOException ioe){
+	            ioe.printStackTrace();
+	        }	
+	}
+	
 	public ArrayList<Email> getHam() {
 		return ham;
 	}

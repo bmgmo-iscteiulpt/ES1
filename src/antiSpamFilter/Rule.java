@@ -1,7 +1,13 @@
 package antiSpamFilter;
 
-public class Rule {
+import java.io.Serializable;
 
+public class Rule implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String name;
 	private double peso;
 	
