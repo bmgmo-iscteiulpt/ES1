@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package antiSpamFilter;
 
 import java.util.ArrayList;
@@ -6,19 +9,32 @@ import java.util.List;
 import org.uma.jmetal.problem.impl.AbstractDoubleProblem;
 import org.uma.jmetal.solution.DoubleSolution;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AntiSpamFilterProblem.
+ */
 public class AntiSpamFilterProblem extends AbstractDoubleProblem {
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	
+	/** The controller. */
 	private Controller controller;
-	  public AntiSpamFilterProblem() {
+	  
+  	/**
+  	 * Instantiates a new anti spam filter problem.
+  	 */
+  	public AntiSpamFilterProblem() {
 	    // 10 variables (anti-spam filter rules) by default 
 	    this(10);
 	  }
 
-	  public AntiSpamFilterProblem(Integer numberOfVariables) {
+	  /**
+  	 * Instantiates a new anti spam filter problem.
+  	 *
+  	 * @param numberOfVariables the number of variables
+  	 */
+  	public AntiSpamFilterProblem(Integer numberOfVariables) {
 		  controller = Controller.getInstance();
 	    setNumberOfVariables(numberOfVariables);
 	    setNumberOfObjectives(2);
@@ -36,7 +52,10 @@ public class AntiSpamFilterProblem extends AbstractDoubleProblem {
 	    setUpperLimit(upperLimit);
 	  }
 
-	  public void evaluate(DoubleSolution solution){
+	  /* (non-Javadoc)
+  	 * @see org.uma.jmetal.problem.Problem#evaluate(java.lang.Object)
+  	 */
+  	public void evaluate(DoubleSolution solution){
 		//Conta 1 avaliação do algoritmo
 		  controller.count();
 		    

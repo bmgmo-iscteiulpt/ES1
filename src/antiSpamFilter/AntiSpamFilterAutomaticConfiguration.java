@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package antiSpamFilter;
 
 import org.uma.jmetal.algorithm.Algorithm;
@@ -17,9 +20,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The Class AntiSpamFilterAutomaticConfiguration.
+ */
 public class AntiSpamFilterAutomaticConfiguration {
+  
+  /** The Constant INDEPENDENT_RUNS. */
   private static final int INDEPENDENT_RUNS = 5 ;
   
+/**
+ * The main method.
+ *
+ * @param args the arguments
+ * @throws IOException Signals that an I/O exception has occurred.
+ */
 public static void main(String[] args) throws IOException {
     String experimentBaseDirectory = "experimentBaseDirectory";
 
@@ -50,6 +64,12 @@ public static void main(String[] args) throws IOException {
     
   }
 
+  /**
+   * Configure algorithm list.
+   *
+   * @param problemList the problem list
+   * @return the list
+   */
   static List<ExperimentAlgorithm<DoubleSolution, List<DoubleSolution>>> configureAlgorithmList(
           List<ExperimentProblem<DoubleSolution>> problemList) {
     List<ExperimentAlgorithm<DoubleSolution, List<DoubleSolution>>> algorithms = new ArrayList<>();

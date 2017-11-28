@@ -1,33 +1,53 @@
+/*
+ * 
+ */
 package antiSpamFilter;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * @author bruno
+ * The Class Controller.
  *
+ * @author Bruno, Soraia, Joana, Tomás
  */
 public class Controller {
 
+	/** The instance. */
 	private static Controller instance = null;
+	
+	/** The rules path. */
 	private String rulesPath;
+	
+	/** The ham path. */
 	private String hamPath;
+	
+	/** The spam path. */
 	private String spamPath;
+	
+	/** The rules. */
 	private ArrayList<Rule> rules;
+	
+	/** The ham. */
 	private ArrayList<Email> ham;
+	
+	/** The spam. */
 	private ArrayList<Email> spam;	
+	
+	/** The count. */
 	private int count;
 
 	/**
-	 * @
+	 * Instantiates a new controller.
+	 *
+	 * @ 
 	 */
 	protected Controller() {
 		this.rules = new ArrayList<>();
@@ -38,7 +58,9 @@ public class Controller {
 
 	// Controller definido como singleton
 	/**
-	 * @return
+	 * Gets the single instance of Controller.
+	 *
+	 * @return single instance of Controller
 	 */
 	public static Controller getInstance() {
 		if (instance == null) {
@@ -49,7 +71,9 @@ public class Controller {
 
 	// Definição caminho do ficheiro rules.cf
 	/**
-	 * @param path
+	 * Sets the rules path.
+	 *
+	 * @param path the new rules path
 	 */
 	public void setRulesPath(String path) {
 		this.rulesPath = path;
@@ -57,7 +81,9 @@ public class Controller {
 
 	// Definição caminho do ficheiro ham.txt
 	/**
-	 * @param path
+	 * Sets the ham path.
+	 *
+	 * @param path the new ham path
 	 */
 	public void setHamPath(String path) {
 		this.hamPath = path;
@@ -65,7 +91,9 @@ public class Controller {
 
 	// Definição caminho do ficheiro spam.txt
 	/**
-	 * @param path
+	 * Sets the spam path.
+	 *
+	 * @param path the new spam path
 	 */
 	public void setSpamPath(String path) {
 		this.spamPath = path;
@@ -73,7 +101,7 @@ public class Controller {
 
 	// Leitura do ficheiro rules.cf, criação de Rules e adição ao vetor
 	/**
-	 * 
+	 * Read rules.
 	 */
 	public void readRules() {
 		rules.clear();
@@ -92,9 +120,18 @@ public class Controller {
 		}
 	}
 
+	/**
+	 * Sets the count.
+	 *
+	 * @param count the new count
+	 */
+	public void setCount(int count) {
+		this.count = count;
+	}
+
 	// Leitura dos pesos gerados pelo algoritmo
 	/**
-	 * 
+	 * Read NSGAII.
 	 */
 	public void readNSGAII() {
 		try {
@@ -132,6 +169,9 @@ public class Controller {
 		}
 	}
 
+	/**
+	 * Read ham.
+	 */
 	// Leitura do ficheiro ham.txt, criação de Emails Ham e adição ao vetor
 	public void readHam() {
 		try {
@@ -166,18 +206,36 @@ public class Controller {
 		}
 	}
 
+	/**
+	 * Gets the rules path.
+	 *
+	 * @return the rules path
+	 */
 	public String getRulesPath() {
 		return rulesPath;
 	}
 
+	/**
+	 * Gets the ham path.
+	 *
+	 * @return the ham path
+	 */
 	public String getHamPath() {
 		return hamPath;
 	}
 
+	/**
+	 * Gets the spam path.
+	 *
+	 * @return the spam path
+	 */
 	public String getSpamPath() {
 		return spamPath;
 	}
 
+	/**
+	 * Read spam.
+	 */
 	// Leitura do ficheiro spam.txt, criação de Emails Spam e adição ao vetor
 	public void readSpam() {
 		try {
@@ -208,6 +266,11 @@ public class Controller {
 		}
 	}
 
+	/**
+	 * Gets the dados tabela.
+	 *
+	 * @return the dados tabela
+	 */
 	// Preenchimento da tabela das regras
 	public String[][] getDadosTabela() {
 		if (rules.isEmpty()) {
@@ -228,6 +291,11 @@ public class Controller {
 	}
 
 	// Cálculo de Falsos Positivos recorrendo aos emails Ham considerados SPAM (
+	/**
+	 * Calcular FP.
+	 *
+	 * @return the int
+	 */
 	// somatório > 5)
 	public int calcularFP() {
 		int falsosPositivos = 0;
@@ -246,6 +314,11 @@ public class Controller {
 	}
 
 	// Cálculo de Falsos Negativos recorrendo aos emails Spam considerados HAM (
+	/**
+	 * Calcular FN.
+	 *
+	 * @return the int
+	 */
 	// somatório < 5)
 	public int calcularFN() {
 		int falsosNegativos = 0;
@@ -262,10 +335,18 @@ public class Controller {
 		return falsosNegativos;
 	}
 
+	/**
+	 * Gets the rules.
+	 *
+	 * @return the rules
+	 */
 	public ArrayList<Rule> getRules() {
 		return rules;
 	}
 
+	/**
+	 * Pesos aleatorios.
+	 */
 	// Gerador de pesos aleatórios entre -5 e 5 para cada regra
 	public void pesosAleatorios() {
 		for (Rule r : rules) {
@@ -273,10 +354,21 @@ public class Controller {
 		}
 	}
 	
+	/**
+	 * Pesos manuais.
+	 *
+	 * @param row the row
+	 * @param value the value
+	 */
 	public void pesosManuais(int row, String value) {
 		rules.get(row).setPeso(Double.valueOf(value));
 	}
 
+	/**
+	 * Pesos algoritmo.
+	 *
+	 * @param pesos the pesos
+	 */
 	// Atribuição dos pesos provenientes do vetor criado pelo algoritmo a cada regra
 	public void pesosAlgoritmo(double[] pesos) {
 		for (int i = 0; i < pesos.length; i++) {
@@ -284,6 +376,11 @@ public class Controller {
 		}
 	}
 
+	/**
+	 * Ficheiros def.
+	 *
+	 * @return true, if successful
+	 */
 	// Verifica se os caminhos para os 3 ficheiros se encontra definido
 	public boolean ficheirosDef() {
 		if (rulesPath == null || hamPath == null || spamPath == null) {
@@ -293,12 +390,20 @@ public class Controller {
 		}
 	}
 
+	/**
+	 * Count.
+	 */
 	// Conta o número de vezes que o algoritmo testou uma configuração diferente
 	public void count() {
 		count++;
 
 	}
 
+	/**
+	 * Gets the count.
+	 *
+	 * @return the count
+	 */
 	// Converte o número total de testes em percentagem para apresentação na GUI
 	public String getCount() {
 		int a = count / 50
@@ -306,22 +411,35 @@ public class Controller {
 		return a + "%";
 	}
 
+	/**
+	 * Guardar pesos.
+	 */
 	public void guardarPesos() {
 		 try{
-	         FileOutputStream fos= new FileOutputStream("pesos.txt");
-	         ObjectOutputStream oos= new ObjectOutputStream(fos);
-	         oos.writeObject(rules);
-	         oos.close();
-	         fos.close();
-	       }catch(IOException ioe){
-	            ioe.printStackTrace();
-	        }	
+			 PrintWriter writer = new PrintWriter("Pesos.txt", "UTF-8");
+			 for(Rule r : rules) {
+				 writer.println(r.getName()+" "+r.getPeso());
+			 }
+			 writer.close();	            
+	        }catch (Exception e) {
+				// TODO: handle exception
+			}	
 	}
 	
+	/**
+	 * Gets the ham.
+	 *
+	 * @return the ham
+	 */
 	public ArrayList<Email> getHam() {
 		return ham;
 	}
 
+	/**
+	 * Gets the spam.
+	 *
+	 * @return the spam
+	 */
 	public ArrayList<Email> getSpam() {
 		return spam;
 	}

@@ -1,6 +1,11 @@
+/*
+ * 
+ */
 package antiSpamFilter;
 
 import java.awt.Color;
+
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.Font;
@@ -17,9 +22,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JTextField;
-import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.JLabel;
 import javax.swing.DefaultCellEditor;
@@ -28,33 +33,78 @@ import javax.swing.JFileChooser;
 
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 
+/**
+ * The Class GUI.
+ */
 public class GUI {
+	
+	/** The controller. */
 	private Controller controller = Controller.getInstance();
+	
+	/** The janela principal. */
 	private JFrame janelaPrincipal;
+	
+	/** The painel. */
 	private JPanel painel;
+	
+	/** The Constant fator. */
 	static final double fator = 1;
+	
+	/** The f. */
 	private static Font f = new Font("Century Gothic", Font.PLAIN, 18);
+	
+	/** The f 2. */
 	private static Font f2 = new Font("Century Gothic", Font.PLAIN, 16);
+	
+	/** The f 3. */
 	private static Font f3 = new Font("Century Gothic", Font.BOLD, 20);
+	
+	/** The info. */
 	private JTextField info;
+	
+	/** The fp. */
 	private JTextField fp;
+	
+	/** The fn. */
 	private JTextField fn;
+	
+	/** The table. */
 	private JTable table;
+	
+	/** The model. */
 	private DefaultTableModel model;
+	
+	/** The scroll. */
 	private JScrollPane scroll;
+	
+	/** The fc. */
 	final JFileChooser fc = new JFileChooser();
+	
+	/** The colunas. */
 	private String[] colunas;
+	
+	/** The p B. */
 	private JProgressBar pB;
+	
+	/** The running. */
 	private boolean running = false;
 	
+	/** The cell text. */
+	private String cellText;
+
 	// FRAME
 
+	/**
+	 * Instantiates a new gui.
+	 */
 	public GUI() {
 		// configuração da janela-------------------------------------------------
 		janelaPrincipal = new JFrame("AntiSpammers");
@@ -94,13 +144,13 @@ public class GUI {
 		ficheiros.add(rules_cf);
 		ficheiros.add(ham_txt);
 		ficheiros.add(spam_txt);
-		
+
 		opcoes.add(guardar);
 
 		janelaPrincipal.setJMenuBar(menuBar);
 
 		// Listener Menu-----------------------------------------------
-		
+
 		rules_cf.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -152,13 +202,23 @@ public class GUI {
 			}
 		});
 		guardar.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(controller.ficheirosDef())
-				controller.guardarPesos();
-				System.out.println("Action");
-				
+				if (controller.ficheirosDef()) {
+					controller.guardarPesos();
+					addinfo("Ficheiro de pesos guardado");
+					File ficheiro = new File("Pesos.txt");
+					if (Desktop.isDesktopSupported()) {
+						try {
+							Desktop.getDesktop().open(ficheiro);
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					} else {
+					}
+				}
 			}
 		});
 		// Info e titulo da tabela---------------------------------------
@@ -209,7 +269,8 @@ public class GUI {
 
 		criarTabela();
 
-		// Botao Algoritmo (Thread que corre o algoritmo separadamente)------------------------
+		// Botao Algoritmo (Thread que corre o algoritmo
+		// separadamente)------------------------
 
 		JButton algoritmo = new JButton("Algoritmo");
 		algoritmo.setMinimumSize(new Dimension(140, 60));
@@ -234,6 +295,7 @@ public class GUI {
 								AntiSpamFilterAutomaticConfiguration.main(args);
 								running = false;
 								addinfo("Pesos ideais gerados");
+								controller.setCount(0);
 								controller.readNSGAII();
 								setTable();
 								janelaPrincipal.setEnabled(true);
@@ -262,7 +324,7 @@ public class GUI {
 		random.setFont(f);
 		random.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (controller.ficheirosDef()) {					
+				if (controller.ficheirosDef()) {
 					controller.pesosAleatorios();
 					setTable();
 					addinfo("Pesos aleatórios gerados");
@@ -308,37 +370,45 @@ public class GUI {
 		janelaPrincipal.setVisible(true);
 
 		addinfo("Bem Vindo");
-		
+
 	}
 
-	//Definir os caminhos dos ficheiros por defeito na localização do projeto----------------
+	// Definir os caminhos dos ficheiros por defeito na localização do
+	/**
+	 * Tryinit.
+	 */
+	// projeto----------------
 	private void tryinit() {
 		controller.setRulesPath("rules.cf");
 		controller.readRules();
-	//	setTable();
+		// setTable();
 		controller.setHamPath("ham.log.txt");
 		controller.readHam();
 		controller.setSpamPath("spam.log.txt");
 		controller.readSpam();
 	}
-	
-	// Definições da tabela-------------------------------------------------------------------
+
+	// Definições da
+	/**
+	 * Criar tabela.
+	 */
+	// tabela-------------------------------------------------------------------
 	private void criarTabela() {
 		colunas = new String[] { "Regras", "Peso" };
-		 model = new DefaultTableModel(controller.getDadosTabela(), colunas) {
+		model = new DefaultTableModel(controller.getDadosTabela(), colunas) {
 			/**
 			 * 
 			 */
 			private static final long serialVersionUID = 1L;
 
 			public boolean isCellEditable(int rowIndex, int columnIndex) {
-				if(columnIndex==0)
+				if (columnIndex == 0)
 					return false;
 				else
 					return true;
-       }				
-		};	
-		
+			}
+		};
+
 		table = new JTable(model);
 		table.getTableHeader().setFont(f2);
 		table.getTableHeader().setBackground(Color.WHITE);
@@ -351,71 +421,112 @@ public class GUI {
 		table.getColumnModel().getColumn(1).setCellRenderer(renderer);
 		JTextField cell = new JTextField();
 		DefaultCellEditor cellEditor = new DefaultCellEditor(cell);
-		 table.getColumnModel().getColumn(1).setCellEditor(cellEditor);
-	    cell.setBorder(new LineBorder(Color.BLACK));	   
-	    cell.setFont(f2);
-	    cell.setHorizontalAlignment(JTextField.CENTER);
-	    table.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), "startEditing");
-	    
-	    cell.addMouseListener(new MouseListener() {
-			String text;
+		table.getColumnModel().getColumn(1).setCellEditor(cellEditor);
+		cell.setBorder(new LineBorder(Color.BLACK));
+		cell.setFont(f2);
+		cell.setHorizontalAlignment(JTextField.CENTER);
+		
+		cell.addMouseListener(new MouseListener() {
+			
+
 			@Override
 			public void mouseReleased(MouseEvent e) {
 			}
-			
+
 			@Override
 			public void mousePressed(MouseEvent e) {
-				text= cell.getText();
+				cellText = cell.getText();
 			}
-			
+
 			@Override
 			public void mouseExited(MouseEvent e) {
 				table.getCellEditor().stopCellEditing();
 				int row = table.getSelectedRow();
-				boolean isNumeric = cell.getText().chars().allMatch( Character::isDigit );
-				if((isNumeric && Double.valueOf(cell.getText()) <=5) && (Double.valueOf(cell.getText()) >-5)) {
+				boolean isNumeric = cell.getText().replace("-","").chars().allMatch(Character::isDigit);
+				if ((isNumeric && Double.valueOf(cell.getText()) <= 5) && (Double.valueOf(cell.getText()) >= -5)) {
 					controller.pesosManuais(row, cell.getText());
-					System.out.println("editada "+row+" para "+cell.getText());	
-						
-				}
-				else {
-					System.out.println(text);
-					cell.setText(text);
+					System.out.println("editada " + row + " para " + cell.getText());
+
+				} else {
+					System.out.println(cellText);
+					cell.setText(cellText);
 					setTable();
-					JOptionPane.showMessageDialog(janelaPrincipal,
-						    "Introduza um número entre -5 e 5 ",
-						    "Erro",
-						    JOptionPane.ERROR_MESSAGE);
-					
+					JOptionPane.showMessageDialog(janelaPrincipal, "Introduza um número entre -5 e 5 ", "Erro",
+							JOptionPane.ERROR_MESSAGE);
+
 				}
 			}
-			
+
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				((JTextField)e.getSource()).selectAll();
-				//row = table.getSelectedRow();
+				((JTextField) e.getSource()).selectAll();
+				// row = table.getSelectedRow();
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+			}
+		});
+		cell.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
 			}
 			
 			@Override
-			public void mouseClicked(MouseEvent e) {				
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+				System.out.println(e.getKeyCode());
+				if (e.getKeyCode()==KeyEvent.VK_ENTER || e.getKeyCode()==KeyEvent.VK_DOWN) {
+					int row = table.getSelectedRow();
+					boolean isNumeric = cell.getText().replace("-","").chars().allMatch(Character::isDigit);
+					if ((isNumeric && Double.valueOf(cell.getText()) <= 5) && (Double.valueOf(cell.getText()) >= -5)) {
+						controller.pesosManuais(row, cell.getText());
+						System.out.println("editada " + row + " para " + cell.getText());
+
+					} else {
+					//	System.out.println(text);
+						cell.setText(cellText);
+						setTable();
+						JOptionPane.showMessageDialog(janelaPrincipal, "Introduza um número entre -5 e 5 ", "Erro",
+								JOptionPane.ERROR_MESSAGE);
+
+					}
+				}
+				
 			}
 		});
 		scroll = new JScrollPane(table);
 		painel.add(scroll, "cell 0 2 2 5,grow");
 	}
-	
+
+	/**
+	 * Sets the table.
+	 */
 	public void setTable() {
 		String[][] rules = controller.getDadosTabela();
-		for(int i = 0; i< rules.length;i++) {
-			model.setValueAt(rules[i][0],i , 0);
-			model.setValueAt(rules[i][1],i , 1);
+		for (int i = 0; i < rules.length; i++) {
+			model.setValueAt(rules[i][0], i, 0);
+			model.setValueAt(rules[i][1], i, 1);
 		}
-		
-		
+
 	}
 
-	// Janela INFO (Thread que altera a informação apresentada na janela INFO-----------------
+	// Janela INFO (Thread que altera a informação apresentada na janela
+	// INFO-----------------
 
+	/**
+	 * Addinfo.
+	 *
+	 * @param s the s
+	 */
 	public void addinfo(String s) {
 		new Thread(new Runnable() {
 
@@ -443,9 +554,14 @@ public class GUI {
 		}).start();
 		// info.setText(s);
 	}
-	
-//Função de classificação da configuração gerada
-	
+
+	// Função de classificação da configuração gerada
+
+	/**
+	 * Classificar.
+	 *
+	 * @param tipo the tipo
+	 */
 	private void classificar(String tipo) {
 		int total = controller.calcularFP() + controller.calcularFN();
 		if (tipo.equals("Leisure")) {
