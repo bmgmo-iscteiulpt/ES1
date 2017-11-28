@@ -1,9 +1,13 @@
-Identificação da turma (ex: EIC1)
+METIA 1
 
-Identificação do grupo (ex: Grupo 2)
+Grupo 
 
-Identificação do número, nome e papel de cada membro do grupo (ex: 12345, José Silva, Scrum Master)
+,Tom�s Pires, Scrum Master;
+70082, Bruno Mataloto, Developer;
+,Soraia Fernandes, Developer;
+,Joana Antunes, Quality Manager;
 
-Identificação da variante do projeto desenvolvida (ex: AntiSpamConfigurationForProfessionalMailbox)
+
+AntiSpamConfigurationForProfessionalLeisureBox
 
 Link para um vídeo no youtube com a demonstração da aplicação final desenvolvida (ex: http://...)

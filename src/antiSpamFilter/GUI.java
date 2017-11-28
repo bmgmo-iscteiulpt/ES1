@@ -16,7 +16,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -58,22 +57,22 @@ public class GUI {
 	/** The Constant fator. */
 	static final double fator = 1;
 	
-	/** The f. */
+	/** The font 1. */
 	private static Font f = new Font("Century Gothic", Font.PLAIN, 18);
 	
-	/** The f 2. */
+	/** The font 2. */
 	private static Font f2 = new Font("Century Gothic", Font.PLAIN, 16);
 	
-	/** The f 3. */
+	/** The font 3. */
 	private static Font f3 = new Font("Century Gothic", Font.BOLD, 20);
 	
-	/** The info. */
+	/** The info textfield. */
 	private JTextField info;
 	
-	/** The fp. */
+	/** The false positives textfield. */
 	private JTextField fp;
 	
-	/** The fn. */
+	/** The false negative textfield. */
 	private JTextField fn;
 	
 	/** The table. */
@@ -85,16 +84,13 @@ public class GUI {
 	/** The scroll. */
 	private JScrollPane scroll;
 	
-	/** The fc. */
+	/** The file chooser. */
 	final JFileChooser fc = new JFileChooser();
 	
 	/** The colunas. */
 	private String[] colunas;
 	
-	/** The p B. */
-	private JProgressBar pB;
-	
-	/** The running. */
+	/** The running boolean. */
 	private boolean running = false;
 	
 	/** The cell text. */
@@ -127,26 +123,29 @@ public class GUI {
 		opcoes.setFont(f2);
 		historico.setFont(f2);
 
-		menuBar.add(ficheiros);
 		menuBar.add(opcoes);
+		menuBar.add(ficheiros);
 		menuBar.add(historico);
 
-		JMenuItem rules_cf = new JMenuItem("rules.cf");
-		JMenuItem ham_txt = new JMenuItem("ham.txt");
-		JMenuItem spam_txt = new JMenuItem("spam.txt");
+		JMenuItem rules_cf = new JMenuItem("Definir o caminho para o ficheiro rules.cf");
+		JMenuItem ham_txt = new JMenuItem("Definir o caminho para o ficheiro ham.txt");
+		JMenuItem spam_txt = new JMenuItem("Definir o caminho para o ficheiro spam.txt");
 		JMenuItem guardar = new JMenuItem("Guardar configuração");
+		JMenuItem abrir = new JMenuItem("Abrir configuração");
 
 		rules_cf.setFont(f2);
 		ham_txt.setFont(f2);
 		spam_txt.setFont(f2);
 		guardar.setFont(f2);
+		abrir.setFont(f2);
 
 		ficheiros.add(rules_cf);
 		ficheiros.add(ham_txt);
 		ficheiros.add(spam_txt);
 
+		opcoes.add(abrir);
 		opcoes.add(guardar);
-
+		
 		janelaPrincipal.setJMenuBar(menuBar);
 
 		// Listener Menu-----------------------------------------------
@@ -359,13 +358,6 @@ public class GUI {
 		});
 
 		painel.add(iniciar, "cell 2 5 3 1,alignx center");
-
-		pB = new JProgressBar();
-		pB.setStringPainted(true);
-		pB.setMinimumSize(new Dimension(400, 40));
-		pB.setFont(f.deriveFont(Font.BOLD));
-		pB.setForeground(Color.WHITE);
-		pB.setBackground(Color.BLACK);
 
 		janelaPrincipal.setVisible(true);
 
