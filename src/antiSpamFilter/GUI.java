@@ -350,6 +350,7 @@ public class GUI {
 					fp.setText(String.valueOf(controller.calcularFP()));
 					fn.setText(String.valueOf(controller.calcularFN()));
 					classificar("Leisure");
+					addinfo("Pesos manuais gerados");
 				} else {
 					addinfo("Verifique os caminhos dos ficheiros");
 				}
