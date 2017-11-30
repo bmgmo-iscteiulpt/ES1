@@ -1,15 +1,16 @@
 package antiSpamFilterTest;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
-import antiSpamFilter.GUI;
+import antiSpamFilter.Main;
 
-class MainTest {
+public class MainTest {
 
 	@Test
-	void testMain() {
-		org.junit.runner.JUnitCore.runClasses(GUI.class);
+	public void testMain() {
+		Main m = new Main();
+		String[] args = new String[1];
+		Main.main(args);
 	}
-	
 
 }

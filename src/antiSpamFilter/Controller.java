@@ -133,12 +133,12 @@ public class Controller {
 	/**
 	 * Read NSGAII.
 	 */
-	public void readNSGAII() {
+	public void readNSGAII(String filePesos,String fileResultados) {
 		try {
 			ArrayList<Double> FPs = new ArrayList<Double>();
 
 			String currentDirectory = new File("").getAbsolutePath();
-			FileReader ficheiro = new FileReader(currentDirectory+"/experimentBaseDirectory/referenceFronts/AntiSpamFilterProblem.NSGAII.rf");
+			FileReader ficheiro = new FileReader(currentDirectory+"/experimentBaseDirectory/referenceFronts/"+fileResultados);
 			BufferedReader leitor = new BufferedReader(ficheiro);
 			String linha = leitor.readLine();
 			while (linha != null) {
@@ -155,7 +155,7 @@ public class Controller {
 					index = i;
 				}
 			}
-			ficheiro = new FileReader(currentDirectory+"/experimentBaseDirectory/referenceFronts/AntiSpamFilterProblem.NSGAII.rs");
+			ficheiro = new FileReader(currentDirectory+"/experimentBaseDirectory/referenceFronts/"+filePesos);
 			leitor = new BufferedReader(ficheiro);
 			for (int i = 0 ; i < index+1;i++)
 				linha = leitor.readLine();
@@ -405,7 +405,7 @@ public class Controller {
 	 * @return the count
 	 */
 	// Converte o número total de testes em percentagem para apresentação na GUI
-	public String getCount() {
+	public String getPercentage() {
 		int a = count / 50
 				;
 		return a + "%";
@@ -442,6 +442,10 @@ public class Controller {
 	 */
 	public ArrayList<Email> getSpam() {
 		return spam;
+	}
+
+	public int getCount() {
+		return count;
 	}
 
 }
