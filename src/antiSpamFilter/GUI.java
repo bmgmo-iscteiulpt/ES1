@@ -158,12 +158,14 @@ public class GUI {
 				dialog.setFile("*.cf");
 				dialog.setVisible(true);
 				String file = dialog.getDirectory() + dialog.getFile();
-				if (file != null) {
+				if (dialog.getFile()!=null) {
+					System.out.println(file);
 					addinfo("Caminho para o ficheiro rules.cf definido");
 					controller.setRulesPath(file);
 					controller.readRules("novoFicheiro");
+					painel.remove(scroll);
 					criarTabela();
-					
+					janelaPrincipal.revalidate();
 				}
 			}
 		});
@@ -177,7 +179,7 @@ public class GUI {
 				dialog.setVisible(true);
 				String file = dialog.getDirectory() + dialog.getFile();
 				System.out.println(dialog.getDirectory());
-				if (file != null) {
+				if (dialog.getFile()!=null) {
 					addinfo("Caminho para o ficheiro ham.txt definido");
 					controller.setHamPath(file);
 					controller.readHam();
@@ -194,7 +196,7 @@ public class GUI {
 				dialog.setFile("*.txt");
 				dialog.setVisible(true);
 				String file = dialog.getDirectory() + dialog.getFile();
-				if (file != null) {
+				if (dialog.getFile()!=null) {
 					addinfo("Caminho para o ficheiro spam.txt definido");
 					controller.setSpamPath(file);
 					controller.readSpam();
@@ -211,11 +213,16 @@ public class GUI {
 				dialog.setFile("*.cf");
 				dialog.setVisible(true);
 				String file = dialog.getDirectory() + dialog.getFile();
-				if (file != null) {
+				if (dialog.getFile()!=null) {
 					addinfo("Configuração carregada");
 					controller.setRulesPath(file);
+					System.out.println(file);
 					controller.readRules("abrirFicheiro");
 					setTable();
+					painel.remove(scroll);
+					criarTabela();
+					janelaPrincipal.revalidate();
+					
 				}
 			}
 		});
@@ -228,7 +235,7 @@ public class GUI {
 				if (controller.ficheirosDef()) {
 					controller.guardarPesos();
 					addinfo("Ficheiro de pesos guardado");
-					File ficheiro = new File(controller.getRulesPath()+"rules.cf");
+					File ficheiro = new File(controller.getRulesPath());
 					if (Desktop.isDesktopSupported()) {
 						try {
 							Desktop.getDesktop().open(ficheiro);
@@ -405,10 +412,10 @@ public class GUI {
 		controller.readRules("novoFicheiro");
 		// setTable();
 		
-		controller.setHamPath("ham.log.txt");
-		controller.readHam();
-		controller.setSpamPath("spam.log.txt");
-		controller.readSpam();
+//		controller.setHamPath("ham.log.txt");
+//		controller.readHam();
+//		controller.setSpamPath("spam.log.txt");
+//		controller.readSpam();
 	}
 
 	// Definições da
@@ -535,6 +542,19 @@ public class GUI {
 	 */
 	public void setTable() {
 		String[][] rules = controller.getDadosTabela();
+		if(model.getRowCount()!=rules.length) {
+			model = new DefaultTableModel(controller.getDadosTabela(), colunas) {
+				
+				private static final long serialVersionUID = 1L;
+
+				public boolean isCellEditable(int rowIndex, int columnIndex) {
+					if (columnIndex == 0)
+						return false;
+					else
+						return true;
+				}
+			};
+		}
 		for (int i = 0; i < rules.length; i++) {
 			model.setValueAt(rules[i][0], i, 0);
 			model.setValueAt(rules[i][1], i, 1);

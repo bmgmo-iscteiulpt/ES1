@@ -119,7 +119,7 @@ public class Controller {
 					rules.add(r);
 				}
 			
-				if(tipo.equals("abrirFichero")) {
+				else if(tipo.equals("abrirFicheiro")) {
 				Rule r = new Rule(tokens[0],Double.valueOf(tokens[1]));
 				rules.add(r);
 				}
@@ -432,7 +432,7 @@ public class Controller {
 	 */
 	public void guardarPesos() {
 		try {
-			PrintWriter writer = new PrintWriter(getRulesPath()+"rules.cf", "UTF-8");
+			PrintWriter writer = new PrintWriter(getRulesPath(), "UTF-8");
 			for (Rule r : rules) {
 				writer.println(r.getName() + " " + r.getPeso());
 			}
