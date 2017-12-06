@@ -1,29 +1,33 @@
 package antiSpamFilterTest;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import org.junit.jupiter.api.Test;
 
-class RuleTest {
+import antiSpamFilter.Rule;
 
+class RuleTest {
+	Rule r=new Rule("nome1");
 	@Test
 	void testRule() {
-		fail("Not yet implemented"); // TODO
+		assertNotNull("should not be null",r);
+		assertEquals("failure - strings are not equal", "nome1", r.getName());
 	}
 
 	@Test
 	void testGetPeso() {
-		fail("Not yet implemented"); // TODO
+		assertNotNull("should not be null", r.getPeso());
 	}
 
 	@Test
 	void testSetPeso() {
-		fail("Not yet implemented"); // TODO
+		r.setPeso(2.4);
+		assertEquals("failure - strings are not equal", 2.4, r.getPeso(), 0.1);
 	}
 
 	@Test
 	void testGetName() {
-		fail("Not yet implemented"); // TODO
+		assertNotNull("should not be null", r.getName());
 	}
 
 }

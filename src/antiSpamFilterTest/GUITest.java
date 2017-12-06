@@ -1,23 +1,23 @@
 package antiSpamFilterTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
-class GUITest {
+public class GUITest {
 
 	@Test
-	void testGUI() {
+	public void testGUI() {
 		fail("Not yet implemented"); // TODO
 	}
 
 	@Test
-	void testSetTable() {
+	public void testSetTable() {
 		fail("Not yet implemented"); // TODO
 	}
 
 	@Test
-	void testAddinfo() {
+	public void testAddinfo() {
 		fail("Not yet implemented"); // TODO
 	}
 

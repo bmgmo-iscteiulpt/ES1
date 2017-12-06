@@ -1,14 +1,16 @@
 package antiSpamFilterTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.Test;
 
-import org.junit.jupiter.api.Test;
+import antiSpamFilter.Main;
 
-class MainTest {
+public class MainTest {
 
 	@Test
-	void testMain() {
-		fail("Not yet implemented"); // TODO
+	public void testMain() {
+		Main m = new Main();
+		String[] args = new String[1];
+		Main.main(args);
 	}
 
 }

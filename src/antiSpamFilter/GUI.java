@@ -324,7 +324,7 @@ public class GUI {
 								running = false;
 								addinfo("Pesos ideais gerados");
 								controller.setCount(0);
-								controller.readNSGAII();
+								controller.readNSGAII("AntiSpamFilterProblem.NSGAII.rf","AntiSpamFilterProblem.NSGAII.rs");
 								setTable();
 								janelaPrincipal.setEnabled(true);
 								fp.setText(String.valueOf(controller.calcularFP()));
@@ -379,6 +379,7 @@ public class GUI {
 					fp.setText(String.valueOf(controller.calcularFP()));
 					fn.setText(String.valueOf(controller.calcularFN()));
 					classificar("Leisure");
+					addinfo("Pesos manuais gerados");
 				} else {
 					addinfo("Verifique os caminhos dos ficheiros");
 				}

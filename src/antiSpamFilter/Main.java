@@ -15,8 +15,7 @@ public class Main {
 	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
-		@SuppressWarnings("unused")
-		GUI janela = new GUI();
+		new GUI();
 	}
 
 }
