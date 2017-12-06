@@ -22,32 +22,32 @@ public class Controller {
 
 	/** The instance. */
 	private static Controller instance = null;
-	
+
 	/** The rules path. */
 	private String rulesPath;
-	
+
 	/** The ham path. */
 	private String hamPath;
-	
+
 	/** The spam path. */
 	private String spamPath;
-	
+
 	/** The rules. */
 	private ArrayList<Rule> rules;
-	
+
 	/** The ham. */
 	private ArrayList<Email> ham;
-	
+
 	/** The spam. */
-	private ArrayList<Email> spam;	
-	
+	private ArrayList<Email> spam;
+
 	/** The count. */
 	private int count;
 
 	/**
 	 * Instantiates a new controller.
 	 *
-	 * @ 
+	 * @
 	 */
 	protected Controller() {
 		this.rules = new ArrayList<>();
@@ -73,7 +73,8 @@ public class Controller {
 	/**
 	 * Sets the rules path.
 	 *
-	 * @param path the new rules path
+	 * @param path
+	 *            the new rules path
 	 */
 	public void setRulesPath(String path) {
 		this.rulesPath = path;
@@ -83,7 +84,8 @@ public class Controller {
 	/**
 	 * Sets the ham path.
 	 *
-	 * @param path the new ham path
+	 * @param path
+	 *            the new ham path
 	 */
 	public void setHamPath(String path) {
 		this.hamPath = path;
@@ -93,7 +95,8 @@ public class Controller {
 	/**
 	 * Sets the spam path.
 	 *
-	 * @param path the new spam path
+	 * @param path
+	 *            the new spam path
 	 */
 	public void setSpamPath(String path) {
 		this.spamPath = path;
@@ -103,15 +106,24 @@ public class Controller {
 	/**
 	 * Read rules.
 	 */
-	public void readRules() {
+	public void readRules(String tipo) {
 		rules.clear();
 		try {
 			FileReader ficheiro = new FileReader(this.rulesPath);
 			BufferedReader leitor = new BufferedReader(ficheiro);
 			String linha = leitor.readLine();
 			while (linha != null) {
-				Rule r = new Rule(linha);
+				String[] tokens = linha.split("\\s+");
+				if(tipo.equals("novoFicheiro")) {
+					Rule r = new Rule(tokens[0]);
+					rules.add(r);
+				}
+			
+				if(tipo.equals("abrirFichero")) {
+				Rule r = new Rule(tokens[0],Double.valueOf(tokens[1]));
 				rules.add(r);
+				}
+				
 				linha = leitor.readLine();
 			}
 			ficheiro.close();
@@ -123,7 +135,8 @@ public class Controller {
 	/**
 	 * Sets the count.
 	 *
-	 * @param count the new count
+	 * @param count
+	 *            the new count
 	 */
 	public void setCount(int count) {
 		this.count = count;
@@ -138,7 +151,8 @@ public class Controller {
 			ArrayList<Double> FPs = new ArrayList<Double>();
 
 			String currentDirectory = new File("").getAbsolutePath();
-			FileReader ficheiro = new FileReader(currentDirectory+"/experimentBaseDirectory/referenceFronts/AntiSpamFilterProblem.NSGAII.rf");
+			FileReader ficheiro = new FileReader(
+					currentDirectory + "/experimentBaseDirectory/referenceFronts/AntiSpamFilterProblem.NSGAII.rf");
 			BufferedReader leitor = new BufferedReader(ficheiro);
 			String linha = leitor.readLine();
 			while (linha != null) {
@@ -147,20 +161,21 @@ public class Controller {
 				linha = leitor.readLine();
 			}
 			ficheiro.close();
-				double resultado=0;
-				int index=0;
-			for(int i = 0; i < FPs.size(); i++) {
-				if(FPs.get(i)>resultado) {
+			double resultado = 0;
+			int index = 0;
+			for (int i = 0; i < FPs.size(); i++) {
+				if (FPs.get(i) > resultado) {
 					resultado = FPs.get(i);
 					index = i;
 				}
 			}
-			ficheiro = new FileReader(currentDirectory+"/experimentBaseDirectory/referenceFronts/AntiSpamFilterProblem.NSGAII.rs");
+			ficheiro = new FileReader(
+					currentDirectory + "/experimentBaseDirectory/referenceFronts/AntiSpamFilterProblem.NSGAII.rs");
 			leitor = new BufferedReader(ficheiro);
-			for (int i = 0 ; i < index+1;i++)
+			for (int i = 0; i < index + 1; i++)
 				linha = leitor.readLine();
 			String[] tokens = linha.split(" ");
-			for(int i = 0 ;i< tokens.length;i++) {
+			for (int i = 0; i < tokens.length; i++) {
 				rules.get(i).setPeso(Double.valueOf(tokens[i]));
 			}
 			ficheiro.close();
@@ -197,7 +212,7 @@ public class Controller {
 				linha = leitor.readLine();
 			}
 			System.out.println("Ham lido");
-		
+
 			ficheiro.close();
 		} catch (
 
@@ -353,12 +368,14 @@ public class Controller {
 			r.setPeso(ThreadLocalRandom.current().nextDouble(-5, 5));
 		}
 	}
-	
+
 	/**
 	 * Pesos manuais.
 	 *
-	 * @param row the row
-	 * @param value the value
+	 * @param row
+	 *            the row
+	 * @param value
+	 *            the value
 	 */
 	public void pesosManuais(int row, String value) {
 		rules.get(row).setPeso(Double.valueOf(value));
@@ -367,7 +384,8 @@ public class Controller {
 	/**
 	 * Pesos algoritmo.
 	 *
-	 * @param pesos the pesos
+	 * @param pesos
+	 *            the pesos
 	 */
 	// Atribuição dos pesos provenientes do vetor criado pelo algoritmo a cada regra
 	public void pesosAlgoritmo(double[] pesos) {
@@ -406,8 +424,7 @@ public class Controller {
 	 */
 	// Converte o número total de testes em percentagem para apresentação na GUI
 	public String getCount() {
-		int a = count / 50
-				;
+		int a = count / 50;
 		return a + "%";
 	}
 
@@ -415,17 +432,18 @@ public class Controller {
 	 * Guardar pesos.
 	 */
 	public void guardarPesos() {
-		 try{
-			 PrintWriter writer = new PrintWriter("Pesos.txt", "UTF-8");
-			 for(Rule r : rules) {
-				 writer.println(r.getName()+" "+r.getPeso());
-			 }
-			 writer.close();	            
-	        }catch (Exception e) {
-				// TODO: handle exception
-			}	
+		try {
+			PrintWriter writer = new PrintWriter(getRulesPath()+"rules.cf", "UTF-8");
+			for (Rule r : rules) {
+				writer.println(r.getName() + " " + r.getPeso());
+			}
+			
+			writer.close();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
-	
+
 	/**
 	 * Gets the ham.
 	 *

@@ -23,6 +23,11 @@ public class Rule {
 		this.name = name;
 	}
 
+	public Rule(String name, double peso) {
+		this.name=name;
+		this.peso=peso;
+	}
+
 	/**
 	 * Gets the peso.
 	 *

@@ -161,8 +161,9 @@ public class GUI {
 				if (file != null) {
 					addinfo("Caminho para o ficheiro rules.cf definido");
 					controller.setRulesPath(file);
-					controller.readRules();
-					setTable();
+					controller.readRules("novoFicheiro");
+					criarTabela();
+					
 				}
 			}
 		});
@@ -200,6 +201,26 @@ public class GUI {
 				}
 			}
 		});
+		
+		abrir.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				FileDialog dialog = new FileDialog(janelaPrincipal, "Selecione o caminho para o ficheiro rules.cf");
+				dialog.setMode(FileDialog.LOAD);
+				dialog.setFile("*.cf");
+				dialog.setVisible(true);
+				String file = dialog.getDirectory() + dialog.getFile();
+				if (file != null) {
+					addinfo("Configuração carregada");
+					controller.setRulesPath(file);
+					controller.readRules("abrirFicheiro");
+					setTable();
+				}
+			}
+		});
+		
+		
 		guardar.addActionListener(new ActionListener() {
 
 			@Override
@@ -207,17 +228,25 @@ public class GUI {
 				if (controller.ficheirosDef()) {
 					controller.guardarPesos();
 					addinfo("Ficheiro de pesos guardado");
-					File ficheiro = new File("Pesos.txt");
+					File ficheiro = new File(controller.getRulesPath()+"rules.cf");
 					if (Desktop.isDesktopSupported()) {
 						try {
 							Desktop.getDesktop().open(ficheiro);
 						} catch (IOException e1) {
-							// TODO Auto-generated catch block
+							System.out.println("Erro na abertura do ficheiro");
 							e1.printStackTrace();
 						}
 					} else {
+						JOptionPane.showMessageDialog(janelaPrincipal, "Não é possível abrir o ficheiro gerado", "Erro",
+								JOptionPane.ERROR_MESSAGE);
+
 					}
 				}
+					else {
+						JOptionPane.showMessageDialog(janelaPrincipal, "Tabela vazia", "Erro",
+								JOptionPane.ERROR_MESSAGE);
+					}
+				
 			}
 		});
 		// Info e titulo da tabela---------------------------------------
@@ -263,7 +292,7 @@ public class GUI {
 		fn.setBackground(Color.WHITE);
 		fn.setHorizontalAlignment(SwingConstants.CENTER);
 
-		tryinit();
+		//tryinit();
 		// Tabela Regras e pesos associados-----------------------------------
 
 		criarTabela();
@@ -372,8 +401,9 @@ public class GUI {
 	// projeto----------------
 	private void tryinit() {
 		controller.setRulesPath("rules.cf");
-		controller.readRules();
+		controller.readRules("novoFicheiro");
 		// setTable();
+		
 		controller.setHamPath("ham.log.txt");
 		controller.readHam();
 		controller.setSpamPath("spam.log.txt");

@@ -46,14 +46,14 @@ class ControllerTest {
 	@Test
 	void testReadRules() {
 		try{
-			c.readRules();
+			c.readRules("novoFicheiro");
 		}
 		catch (Exception e) {
 		
 		}
 		try{
 			c.setRulesPath("rules.cf");
-			c.readRules();
+			c.readRules("novoFicheiro");
 			assertNotNull("should not be null",c.getRules().get(0));
 			assertEquals("failure - strings are not equal","BAYES_00",c.getRules().get(0).getName());
 			assertEquals("failure - strings are not equal","0.0",String.valueOf(c.getRules().get(0).getPeso()));
