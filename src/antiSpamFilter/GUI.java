@@ -25,7 +25,9 @@ import javax.swing.table.DefaultTableModel;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.JLabel;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -112,6 +114,13 @@ public class GUI {
 		painel.setLayout(new MigLayout("", "[grow][grow][grow][][grow]", "[100px][100px][][][250px][100px][][]"));
 		janelaPrincipal.setResizable(false);
 		janelaPrincipal.setLocationRelativeTo(null);
+		Color c = new Color(254, 254, 254, 100);
+		painel.setBackground(c);
+		try { 
+		    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
 
 		// MENU-------------------------------------------------------------------
 		JMenuBar menuBar = new JMenuBar();
@@ -164,6 +173,7 @@ public class GUI {
 					painel.remove(scroll);
 					criarTabela();
 					janelaPrincipal.revalidate();
+					janelaPrincipal.repaint();
 				}
 			}
 		});
@@ -221,7 +231,7 @@ public class GUI {
 					painel.remove(scroll);
 					criarTabela();
 					janelaPrincipal.revalidate();
-					
+					janelaPrincipal.repaint();
 				}
 			}
 		});
@@ -356,6 +366,8 @@ public class GUI {
 		random.setMinimumSize(new Dimension(140, 60));
 		;
 		random.setFont(f);
+		random.setBorder(new RoundedBorder(15));
+		random.setForeground(Color.BLUE);
 		random.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (controller.ficheirosDef()) {
@@ -440,7 +452,7 @@ public class GUI {
 
 		table = new JTable(model);
 		table.getTableHeader().setFont(f2);
-		table.getTableHeader().setBackground(Color.WHITE);
+		table.getTableHeader().setBackground(Color.gray);
 		table.getColumnModel().getColumn(0).setMinWidth(300);
 		table.setRowHeight(25);
 		table.setFont(f2);
