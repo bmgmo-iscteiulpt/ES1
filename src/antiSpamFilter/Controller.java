@@ -151,7 +151,8 @@ public class Controller {
 			ArrayList<Double> FPs = new ArrayList<Double>();
 
 			String currentDirectory = new File("").getAbsolutePath();
-			FileReader ficheiro = new FileReader(currentDirectory+"/experimentBaseDirectory/referenceFronts/"+fileResultados);
+			FileReader ficheiro = new FileReader(currentDirectory+"/experimentBaseDirectory/referenceFronts/"+filePesos);
+			System.out.println(currentDirectory+"/experimentBaseDirectory/referenceFronts/"+fileResultados);
 			BufferedReader leitor = new BufferedReader(ficheiro);
 			String linha = leitor.readLine();
 			while (linha != null) {
@@ -169,7 +170,7 @@ public class Controller {
 				}
 			}
 
-			ficheiro = new FileReader(currentDirectory+"/experimentBaseDirectory/referenceFronts/"+filePesos);
+			ficheiro = new FileReader(currentDirectory+"/experimentBaseDirectory/referenceFronts/"+fileResultados);
 			leitor = new BufferedReader(ficheiro);
 			for (int i = 0; i < index + 1; i++)
 				linha = leitor.readLine();
@@ -439,7 +440,7 @@ public class Controller {
 			
 			writer.close();
 		} catch (Exception e) {
-			// TODO: handle exception
+			System.out.println("Erro ao guardar os pesos");
 		}
 	}
 
@@ -463,6 +464,11 @@ public class Controller {
 
 	public int getCount() {
 		return count;
+	}
+
+	public void clearRules() {
+		rules.clear();
+		
 	}
 
 }

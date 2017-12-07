@@ -117,15 +117,12 @@ public class GUI {
 		JMenuBar menuBar = new JMenuBar();
 		JMenu ficheiros = new JMenu("Ficheiros");
 		JMenu opcoes = new JMenu("Opções");
-		JMenu historico = new JMenu("Histórico");
 
 		ficheiros.setFont(f2);
 		opcoes.setFont(f2);
-		historico.setFont(f2);
 
 		menuBar.add(opcoes);
 		menuBar.add(ficheiros);
-		menuBar.add(historico);
 
 		JMenuItem rules_cf = new JMenuItem("Definir o caminho para o ficheiro rules.cf");
 		JMenuItem ham_txt = new JMenuItem("Definir o caminho para o ficheiro ham.txt");
@@ -162,6 +159,7 @@ public class GUI {
 					System.out.println(file);
 					addinfo("Caminho para o ficheiro rules.cf definido");
 					controller.setRulesPath(file);
+					controller.clearRules();
 					controller.readRules("novoFicheiro");
 					painel.remove(scroll);
 					criarTabela();
@@ -217,6 +215,7 @@ public class GUI {
 					addinfo("Configuração carregada");
 					controller.setRulesPath(file);
 					System.out.println(file);
+					controller.clearRules();
 					controller.readRules("abrirFicheiro");
 					setTable();
 					painel.remove(scroll);
