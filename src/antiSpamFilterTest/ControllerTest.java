@@ -1,9 +1,9 @@
 package antiSpamFilterTest;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.Test;
@@ -55,24 +55,22 @@ public class ControllerTest {
 		assertEquals("BAYES_00", c.getRules().get(0).getName(), "failure - strings are not equal");
 		assertEquals("0.0", String.valueOf(c.getRules().get(0).getPeso()), "failure - strings are not equal");
 
+		c.readRules("abrirFicheiro");
+		assertNotNull("should not be null", c.getRules().get(0));
+		assertTrue(c.getRules().get(0).getPeso() != 0);
 	}
 
 	@Test
 	public void testReadNSGAII() {
-		c.readNSGAII("teste","teste");
-		try{
-			c.setRulesPath("rules.cf");
-			c.readRules("novoFicheiro");
-			assertNotNull("should not be null",c.getRules().get(0));
-			assertEquals("failure - strings are not equal","BAYES_00",c.getRules().get(0).getName());
-			assertEquals("failure - strings are not equal","0.0",String.valueOf(c.getRules().get(0).getPeso()));
-			
-		}
-		catch (Exception e) {
-			// TODO: handle exception
-		}
+		c.readNSGAII("teste", "teste");
 		c.setRulesPath("rules.cf");
-		c.readNSGAII("AntiSpamFilterProblem.NSGAII.rf","AntiSpamFilterProblem.NSGAII.rs");
+		c.readRules("novoFicheiro");
+		assertNotNull("should not be null", c.getRules().get(0));
+		assertEquals( "BAYES_00", c.getRules().get(0).getName(),"failure - strings are not equal");
+		assertEquals( "0.0", String.valueOf(c.getRules().get(0).getPeso()),"failure - strings are not equal");
+
+		c.setRulesPath("rules.cf");
+		c.readNSGAII("AntiSpamFilterProblem.NSGAII.rf", "AntiSpamFilterProblem.NSGAII.rs");
 		assertNotNull(c.getRules());
 	}
 
@@ -81,42 +79,66 @@ public class ControllerTest {
 		c.setHamPath("path");
 		c.readHam();
 
-		c.setHamPath("ham.log.txt");
+		c.setHamPath("ham.log");
 		c.readHam();
 		assertNotNull("should not be null", c.getHam());
-		assertEquals("xval_initial/9/_ham_/00035.a0e0e8cdca0b8352a9e9c2c81e5d5cd7", c.getHam().get(0).getId(), "failure - strings are not equal");
+		assertEquals("xval_initial/9/_ham_/00035.a0e0e8cdca0b8352a9e9c2c81e5d5cd7", c.getHam().get(0).getId(),
+				"failure - strings are not equal");
 	}
 
 	@Test
 	public void testReadSpam() {
+		
 		c.setSpamPath("path");
 		c.readSpam();
 
-		c.setSpamPath("spam.log.txt");
+		c.setSpamPath("spam.log");
 		c.readSpam();
 		assertNotNull("should not be null", c.getSpam());
-		assertEquals("xval_initial/9/_spam_/00938.cdac5333fc78f7128fd8f2905fe4b89b", c.getSpam().get(0).getId(), "failure - strings are not equal");
-	
+		assertEquals("xval_initial/9/_spam_/00938.cdac5333fc78f7128fd8f2905fe4b89b", c.getSpam().get(0).getId(),
+				"failure - strings are not equal");
+
 	}
 
 	@Test
 	public void testGetDadosTabela() {
-		fail("Not yet implemented"); // TODO
+		c.clearRules();
+		String[][] dados =c.getDadosTabela();
+		assertNotNull("should not be null", dados);
 	}
 
 	@Test
 	public void testCalcularFP() {
-		fail("Not yet implemented"); // TODO
+		
+		c.setHamPath("ham.log");
+		c.setSpamPath("spam.log");
+		c.setRulesPath("rules.cf");
+		c.readRules("novoFicheiro");
+		c.readHam();
+		c.readSpam();
+		
+		c.getRules().get(0).setPeso(5.0);
+		int fp = c.calcularFP();
+		assertEquals(692,fp);
 	}
 
 	@Test
 	public void testCalcularFN() {
-		fail("Not yet implemented"); // TODO
+		c.setHamPath("ham.log");
+		c.setSpamPath("spam.log");
+		c.setRulesPath("rules.cf");
+		c.readRules("novoFicheiro");
+		c.readHam();
+		c.readSpam();
+		
+		c.getRules().get(0).setPeso(-5.0);
+		int fn = c.calcularFN();
+		assertEquals(239,fn);
 	}
 
 	@Test
 	public void testGetRules() {
-		 // TODO
+		assertNotNull(c.getRules());
 	}
 
 	@Test
@@ -125,7 +147,7 @@ public class ControllerTest {
 		c.readRules("novoFicheiro");
 		c.pesosAleatorios();
 		assertNotNull(c.getRules());
-		assertTrue(c.getRules().get(0).getPeso()<5 && c.getRules().get(0).getPeso() >-5);
+		assertTrue(c.getRules().get(0).getPeso() < 5 && c.getRules().get(0).getPeso() > -5);
 	}
 
 	@Test
@@ -141,11 +163,10 @@ public class ControllerTest {
 	public void testPesosAlgoritmo() {
 		c.setRulesPath("rules.cf");
 		c.readRules("novoFicheiro");
-		double[] pesos= {3.0,2.0,1.0};
+		double[] pesos = { 3.0, 2.0, 1.0 };
 		c.pesosAlgoritmo(pesos);
 		assertEquals(3.0, c.getRules().get(0).getPeso(), "failure - strings are not equal");
 
-		
 	}
 
 	@Test
@@ -168,11 +189,32 @@ public class ControllerTest {
 		c.count();
 		assertEquals(1, c.getCount());
 	}
-	
+
 	@Test
 	public void testGetPercentage() {
 		assertEquals("0%", c.getPercentage());
-		
-	}
 
+	}
+	
+	@Test
+	public void testsetCount() {
+		c.setCount(10);
+		assertEquals(10, c.getCount());
+	}
+	
+	@Test
+	public void isRulesDef() {
+		c.clearRules();
+		assertFalse(c.isRulesdef());
+		c.readRules("novoFicheiro");
+		assertTrue(c.isRulesdef());
+	}
+	
+	@Test
+	public void guardarPesos() {
+		c.getRules().get(0).setPeso(4.0);
+		c.guardarPesos();
+		c.readRules("abrirFicheiro");
+		assertEquals(4,c.getRules().get(0).getPeso());
+	}
 }

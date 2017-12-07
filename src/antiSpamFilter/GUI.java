@@ -27,7 +27,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.JLabel;
-import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -46,57 +45,70 @@ import javax.swing.JTable;
  * The Class GUI.
  */
 public class GUI {
-	
+
 	/** The controller. */
 	private Controller controller = Controller.getInstance();
-	
+
 	/** The janela principal. */
 	private JFrame janelaPrincipal;
-	
+
 	/** The painel. */
 	private JPanel painel;
-	
+
 	/** The Constant fator. */
 	static final double fator = 1;
-	
+
 	/** The font 1. */
 	private static Font f = new Font("Century Gothic", Font.PLAIN, 18);
-	
+
 	/** The font 2. */
 	private static Font f2 = new Font("Century Gothic", Font.PLAIN, 16);
-	
+
 	/** The font 3. */
 	private static Font f3 = new Font("Century Gothic", Font.BOLD, 20);
-	
+
 	/** The info textfield. */
 	private JTextField info;
-	
+
 	/** The false positives textfield. */
 	private JTextField fp;
-	
+
 	/** The false negative textfield. */
 	private JTextField fn;
-	
+
 	/** The table. */
 	private JTable table;
-	
+
 	/** The model. */
 	private DefaultTableModel model;
-	
+
 	/** The scroll. */
 	private JScrollPane scroll;
-	
+
 	/** The file chooser. */
 	final JFileChooser fc = new JFileChooser();
-	
+
 	/** The colunas. */
 	private String[] colunas;
-	
+
 	/** The running boolean. */
 	private boolean running = false;
-	
+
 	/** The cell text. */
 	private String cellText;
+
+	private JMenuItem rules_cf;
+	private JMenuItem ham_log;
+	private JMenuItem spam_log;
+	private JMenuItem guardar;
+	private JMenuItem abrir;
+	private JMenuItem limpar;
+
+	private JButton algoritmo;
+
+	private JButton random;
+
+	private JButton iniciar;
 
 	// FRAME
 
@@ -116,10 +128,10 @@ public class GUI {
 		janelaPrincipal.setLocationRelativeTo(null);
 		Color c = new Color(254, 254, 254, 100);
 		painel.setBackground(c);
-		try { 
-		    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
-		    e.printStackTrace();
+			e.printStackTrace();
 		}
 
 		// MENU-------------------------------------------------------------------
@@ -133,25 +145,28 @@ public class GUI {
 		menuBar.add(opcoes);
 		menuBar.add(ficheiros);
 
-		JMenuItem rules_cf = new JMenuItem("Definir o caminho para o ficheiro rules.cf");
-		JMenuItem ham_txt = new JMenuItem("Definir o caminho para o ficheiro ham.txt");
-		JMenuItem spam_txt = new JMenuItem("Definir o caminho para o ficheiro spam.txt");
-		JMenuItem guardar = new JMenuItem("Guardar configuração");
-		JMenuItem abrir = new JMenuItem("Abrir configuração");
+		rules_cf = new JMenuItem("Caminho para o ficheiro rules.cf");
+		ham_log = new JMenuItem("Caminho para o ficheiro ham.log");
+		spam_log = new JMenuItem("Caminho para o ficheiro spam.log");
+		guardar = new JMenuItem("Guardar configuração");
+		abrir = new JMenuItem("Abrir configuração");
+		limpar = new JMenuItem("Limpar configuração");
 
 		rules_cf.setFont(f2);
-		ham_txt.setFont(f2);
-		spam_txt.setFont(f2);
+		ham_log.setFont(f2);
+		spam_log.setFont(f2);
 		guardar.setFont(f2);
 		abrir.setFont(f2);
+		limpar.setFont(f2);
 
 		ficheiros.add(rules_cf);
-		ficheiros.add(ham_txt);
-		ficheiros.add(spam_txt);
+		ficheiros.add(ham_log);
+		ficheiros.add(spam_log);
 
 		opcoes.add(abrir);
 		opcoes.add(guardar);
-		
+		opcoes.add(limpar);
+
 		janelaPrincipal.setJMenuBar(menuBar);
 
 		// Listener Menu-----------------------------------------------
@@ -159,59 +174,84 @@ public class GUI {
 		rules_cf.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				FileDialog dialog = new FileDialog(janelaPrincipal, "Selecione o caminho para o ficheiro rules.cf");
+				FileDialog dialog = new FileDialog(janelaPrincipal, "Caminho para o ficheiro rules.cf");
 				dialog.setMode(FileDialog.LOAD);
 				dialog.setFile("*.cf");
 				dialog.setVisible(true);
 				String file = dialog.getDirectory() + dialog.getFile();
-				if (dialog.getFile()!=null) {
-					System.out.println(file);
-					addinfo("Caminho para o ficheiro rules.cf definido");
-					controller.setRulesPath(file);
-					controller.clearRules();
-					controller.readRules("novoFicheiro");
-					painel.remove(scroll);
-					criarTabela();
-					janelaPrincipal.revalidate();
-					janelaPrincipal.repaint();
+				if (dialog.getFile() != null) {
+					if (!dialog.getFile().contains("rules")) {
+						JOptionPane.showMessageDialog(janelaPrincipal,
+								"Certifique-se de que o ficheiro selecionado contem as regras", "Erro",
+								JOptionPane.ERROR_MESSAGE);
+					} else {
+						addinfo("Caminho para o ficheiro rules.cf definido");
+						controller.setRulesPath(file);
+						controller.clearRules();
+						controller.readRules("novoFicheiro");
+						painel.remove(scroll);
+						criarTabela();
+						janelaPrincipal.revalidate();
+						janelaPrincipal.repaint();
+					}
 				}
 			}
 		});
 
-		ham_txt.addActionListener(new ActionListener() {
+		ham_log.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				FileDialog dialog = new FileDialog(janelaPrincipal, "Selecione o caminho para o ficheiro ham.txt");
-				dialog.setMode(FileDialog.LOAD);
-				dialog.setFile("*.txt");
-				dialog.setVisible(true);
-				String file = dialog.getDirectory() + dialog.getFile();
-				System.out.println(dialog.getDirectory());
-				if (dialog.getFile()!=null) {
-					addinfo("Caminho para o ficheiro ham.txt definido");
-					controller.setHamPath(file);
-					controller.readHam();
+				if (controller.isRulesdef()) {
+					FileDialog dialog = new FileDialog(janelaPrincipal, "Caminho para o ficheiro ham.log");
+					dialog.setMode(FileDialog.LOAD);
+					dialog.setFile("*.log*");
+					dialog.setVisible(true);
+					String file = dialog.getDirectory() + dialog.getFile();
+					if (dialog.getFile() != null) {
+						if (!dialog.getFile().contains("ham")) {
+							JOptionPane.showMessageDialog(janelaPrincipal,
+									"Certifique-se de que o ficheiro selecionado contem os emails de ham", "Erro",
+									JOptionPane.ERROR_MESSAGE);
+						} else {
+							addinfo("Caminho para o ficheiro ham.log definido");
+							controller.setHamPath(file);
+							controller.readHam();
+						}
+					}
+				} else {
+					JOptionPane.showMessageDialog(janelaPrincipal, "Comece por selecionar o ficheiro rules.cf", "Erro",
+							JOptionPane.ERROR_MESSAGE);
 				}
-
 			}
 		});
 
-		spam_txt.addActionListener(new ActionListener() {
+		spam_log.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				FileDialog dialog = new FileDialog(janelaPrincipal, "Selecione o caminho para o ficheiro spam.txt");
-				dialog.setMode(FileDialog.LOAD);
-				dialog.setFile("*.txt");
-				dialog.setVisible(true);
-				String file = dialog.getDirectory() + dialog.getFile();
-				if (dialog.getFile()!=null) {
-					addinfo("Caminho para o ficheiro spam.txt definido");
-					controller.setSpamPath(file);
-					controller.readSpam();
+				if (controller.isRulesdef()) {
+					FileDialog dialog = new FileDialog(janelaPrincipal, "Caminho para o ficheiro spam.log");
+					dialog.setMode(FileDialog.LOAD);
+					dialog.setFile("*.log*");
+					dialog.setVisible(true);
+					String file = dialog.getDirectory() + dialog.getFile();
+					if (dialog.getFile() != null) {
+						if (!dialog.getFile().contains("spam")) {
+							JOptionPane.showMessageDialog(janelaPrincipal,
+									"Certifique-se de que o ficheiro selecionado contem os emails de spam", "Erro",
+									JOptionPane.ERROR_MESSAGE);
+						} else {
+							addinfo("Caminho para o ficheiro spam.log definido");
+							controller.setSpamPath(file);
+							controller.readSpam();
+						}
+					}
+				} else {
+					JOptionPane.showMessageDialog(janelaPrincipal, "Comece por selecionar o ficheiro rules.cf", "Erro",
+							JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
-		
+
 		abrir.addActionListener(new ActionListener() {
 
 			@Override
@@ -221,7 +261,7 @@ public class GUI {
 				dialog.setFile("*.cf");
 				dialog.setVisible(true);
 				String file = dialog.getDirectory() + dialog.getFile();
-				if (dialog.getFile()!=null) {
+				if (dialog.getFile() != null) {
 					addinfo("Configuração carregada");
 					controller.setRulesPath(file);
 					System.out.println(file);
@@ -235,8 +275,7 @@ public class GUI {
 				}
 			}
 		});
-		
-		
+
 		guardar.addActionListener(new ActionListener() {
 
 			@Override
@@ -257,14 +296,27 @@ public class GUI {
 								JOptionPane.ERROR_MESSAGE);
 
 					}
+				} else {
+					JOptionPane.showMessageDialog(janelaPrincipal, "Tabela vazia", "Erro", JOptionPane.ERROR_MESSAGE);
 				}
-					else {
-						JOptionPane.showMessageDialog(janelaPrincipal, "Tabela vazia", "Erro",
-								JOptionPane.ERROR_MESSAGE);
-					}
-				
+
 			}
 		});
+
+		limpar.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (controller.ficheirosDef()) {
+					controller.readRules("novoFicheiro");
+					setTable();
+					addinfo("Configuração limpa");
+				} else {
+
+				}
+			}
+		});
+
 		// Info e titulo da tabela---------------------------------------
 
 		info = new JTextField();
@@ -308,7 +360,7 @@ public class GUI {
 		fn.setBackground(Color.WHITE);
 		fn.setHorizontalAlignment(SwingConstants.CENTER);
 
-		//tryinit();
+		// tryinit();
 		// Tabela Regras e pesos associados-----------------------------------
 
 		criarTabela();
@@ -316,7 +368,7 @@ public class GUI {
 		// Botao Algoritmo (Thread que corre o algoritmo
 		// separadamente)------------------------
 
-		JButton algoritmo = new JButton("Algoritmo");
+		algoritmo = new JButton("Algoritmo");
 		algoritmo.setMinimumSize(new Dimension(140, 60));
 		;
 		algoritmo.setFont(f);
@@ -340,12 +392,13 @@ public class GUI {
 								running = false;
 								addinfo("Pesos ideais gerados");
 								controller.setCount(0);
-								controller.readNSGAII("AntiSpamFilterProblem.NSGAII.rf","AntiSpamFilterProblem.NSGAII.rs");
+								controller.readNSGAII("AntiSpamFilterProblem.NSGAII.rf",
+										"AntiSpamFilterProblem.NSGAII.rs");
 								setTable();
 								janelaPrincipal.setEnabled(true);
 								fp.setText(String.valueOf(controller.calcularFP()));
 								fn.setText(String.valueOf(controller.calcularFN()));
-								classificar("Leisure");
+								classificar();
 							} catch (IOException e1) {
 								System.out.println("Erro na thread do algoritmo");
 								e1.printStackTrace();
@@ -362,12 +415,9 @@ public class GUI {
 
 		// Botão Aleatorio ----------------------------------
 
-		JButton random = new JButton("Aleatório");
+		random = new JButton("Aleatório");
 		random.setMinimumSize(new Dimension(140, 60));
-		;
 		random.setFont(f);
-		random.setBorder(new RoundedBorder(15));
-		random.setForeground(Color.BLUE);
 		random.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (controller.ficheirosDef()) {
@@ -376,7 +426,7 @@ public class GUI {
 					addinfo("Pesos aleatórios gerados");
 					fp.setText(String.valueOf(controller.calcularFP()));
 					fn.setText(String.valueOf(controller.calcularFN()));
-					classificar("Leisure");
+					classificar();
 				} else {
 					addinfo("Verifique os caminhos dos ficheiros");
 				}
@@ -387,7 +437,7 @@ public class GUI {
 
 		// Botao Manual---------------------------------------
 
-		JButton iniciar = new JButton("Manual");
+		iniciar = new JButton("Manual");
 		iniciar.setMinimumSize(new Dimension(140, 60));
 		;
 		iniciar.setFont(f);
@@ -396,7 +446,7 @@ public class GUI {
 				if (controller.ficheirosDef()) {
 					fp.setText(String.valueOf(controller.calcularFP()));
 					fn.setText(String.valueOf(controller.calcularFN()));
-					classificar("Leisure");
+					classificar();
 					addinfo("Pesos manuais gerados");
 				} else {
 					addinfo("Verifique os caminhos dos ficheiros");
@@ -412,24 +462,6 @@ public class GUI {
 		addinfo("Bem Vindo");
 
 	}
-
-	// Definir os caminhos dos ficheiros por defeito na localização do
-	/**
-	 * Tryinit.
-	 */
-	// projeto----------------
-	private void tryinit() {
-		controller.setRulesPath("rules.cf");
-		controller.readRules("novoFicheiro");
-		// setTable();
-		
-//		controller.setHamPath("ham.log.txt");
-//		controller.readHam();
-//		controller.setSpamPath("spam.log.txt");
-//		controller.readSpam();
-	}
-
-	// Definições da
 	/**
 	 * Criar tabela.
 	 */
@@ -466,9 +498,8 @@ public class GUI {
 		cell.setBorder(new LineBorder(Color.BLACK));
 		cell.setFont(f2);
 		cell.setHorizontalAlignment(JTextField.CENTER);
-		
+
 		cell.addMouseListener(new MouseListener() {
-			
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -483,7 +514,7 @@ public class GUI {
 			public void mouseExited(MouseEvent e) {
 				table.getCellEditor().stopCellEditing();
 				int row = table.getSelectedRow();
-				boolean isNumeric = cell.getText().replace("-","").chars().allMatch(Character::isDigit);
+				boolean isNumeric = cell.getText().replace("-", "").chars().allMatch(Character::isDigit);
 				if ((isNumeric && Double.valueOf(cell.getText()) <= 5) && (Double.valueOf(cell.getText()) >= -5)) {
 					controller.pesosManuais(row, cell.getText());
 					System.out.println("editada " + row + " para " + cell.getText());
@@ -509,31 +540,31 @@ public class GUI {
 			}
 		});
 		cell.addKeyListener(new KeyListener() {
-			
+
 			@Override
 			public void keyTyped(KeyEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void keyReleased(KeyEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void keyPressed(KeyEvent e) {
 				System.out.println(e.getKeyCode());
-				if (e.getKeyCode()==KeyEvent.VK_ENTER || e.getKeyCode()==KeyEvent.VK_DOWN) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER || e.getKeyCode() == KeyEvent.VK_DOWN) {
 					int row = table.getSelectedRow();
-					boolean isNumeric = cell.getText().replace("-","").chars().allMatch(Character::isDigit);
+					boolean isNumeric = cell.getText().replace("-", "").chars().allMatch(Character::isDigit);
 					if ((isNumeric && Double.valueOf(cell.getText()) <= 5) && (Double.valueOf(cell.getText()) >= -5)) {
 						controller.pesosManuais(row, cell.getText());
 						System.out.println("editada " + row + " para " + cell.getText());
 
 					} else {
-					//	System.out.println(text);
+						// System.out.println(text);
 						cell.setText(cellText);
 						setTable();
 						JOptionPane.showMessageDialog(janelaPrincipal, "Introduza um número entre -5 e 5 ", "Erro",
@@ -541,7 +572,7 @@ public class GUI {
 
 					}
 				}
-				
+
 			}
 		});
 		scroll = new JScrollPane(table);
@@ -553,9 +584,9 @@ public class GUI {
 	 */
 	public void setTable() {
 		String[][] rules = controller.getDadosTabela();
-		if(model.getRowCount()!=rules.length) {
+		if (model.getRowCount() != rules.length) {
 			model = new DefaultTableModel(controller.getDadosTabela(), colunas) {
-				
+
 				private static final long serialVersionUID = 1L;
 
 				public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -579,7 +610,8 @@ public class GUI {
 	/**
 	 * Addinfo.
 	 *
-	 * @param s the s
+	 * @param s
+	 *            the s
 	 */
 	public void addinfo(String s) {
 		new Thread(new Runnable() {
@@ -614,11 +646,12 @@ public class GUI {
 	/**
 	 * Classificar.
 	 *
-	 * @param tipo the tipo
+	 * @param tipo
+	 *            the tipo
 	 */
-	private void classificar(String tipo) {
+	public void classificar() {
+
 		int total = controller.calcularFP() + controller.calcularFN();
-		if (tipo.equals("Leisure")) {
 			if (controller.calcularFP() < total * 0.20) {
 				fp.setForeground(Color.RED);
 				fn.setForeground(Color.RED);
@@ -629,7 +662,66 @@ public class GUI {
 				fp.setForeground(Color.GREEN);
 				fn.setForeground(Color.GREEN);
 			}
-		}
+	}
+
+	/**
+	 * @return the rules_cf
+	 */
+	public JMenuItem getRules_cf() {
+		return rules_cf;
+	}
+
+	/**
+	 * @return the ham_log
+	 */
+	public JMenuItem getHam_log() {
+		return ham_log;
+	}
+
+	/**
+	 * @return the spam_log
+	 */
+	public JMenuItem getSpam_log() {
+		return spam_log;
+	}
+
+	/**
+	 * @return the guardar
+	 */
+	public JMenuItem getGuardar() {
+		return guardar;
+	}
+
+	/**
+	 * @return the abrir
+	 */
+	public JMenuItem getAbrir() {
+		return abrir;
+	}
+
+	/**
+	 * @return the limpar
+	 */
+	public JMenuItem getLimpar() {
+		return limpar;
+	}
+	/**
+	 * @return the algoritmo
+	 */
+	public JButton getAlgoritmo() {
+		return algoritmo;
+	}
+	/**
+	 * @return the random
+	 */
+	public JButton getRandom() {
+		return random;
+	}
+	/**
+	 * @return the iniciar
+	 */
+	public JButton getIniciar() {
+		return iniciar;
 	}
 
 }

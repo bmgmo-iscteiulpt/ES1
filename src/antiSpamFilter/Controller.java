@@ -471,4 +471,10 @@ public class Controller {
 		
 	}
 
+	public boolean isRulesdef() {
+		if(!rules.isEmpty())
+			return true;
+		else
+			return false;
+	}
 }
