@@ -13,10 +13,9 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class Controller.
- *
- * @author Bruno, Soraia, Joana, Tomás
  */
 public class Controller {
 
@@ -46,8 +45,6 @@ public class Controller {
 
 	/**
 	 * Instantiates a new controller.
-	 *
-	 * @
 	 */
 	protected Controller() {
 		this.rules = new ArrayList<>();
@@ -73,8 +70,7 @@ public class Controller {
 	/**
 	 * Sets the rules path.
 	 *
-	 * @param path
-	 *            the new rules path
+	 * @param path the new rules path
 	 */
 	public void setRulesPath(String path) {
 		this.rulesPath = path;
@@ -84,8 +80,7 @@ public class Controller {
 	/**
 	 * Sets the ham path.
 	 *
-	 * @param path
-	 *            the new ham path
+	 * @param path the new ham path
 	 */
 	public void setHamPath(String path) {
 		this.hamPath = path;
@@ -95,8 +90,7 @@ public class Controller {
 	/**
 	 * Sets the spam path.
 	 *
-	 * @param path
-	 *            the new spam path
+	 * @param path the new spam path
 	 */
 	public void setSpamPath(String path) {
 		this.spamPath = path;
@@ -105,6 +99,8 @@ public class Controller {
 	// Leitura do ficheiro rules.cf, criação de Rules e adição ao vetor
 	/**
 	 * Read rules.
+	 *
+	 * @param tipo the tipo
 	 */
 	public void readRules(String tipo) {
 		rules.clear();
@@ -119,7 +115,7 @@ public class Controller {
 					rules.add(r);
 				}
 			
-				else if(tipo.equals("abrirFicheiro")) {
+				else {
 				Rule r = new Rule(tokens[0],Double.valueOf(tokens[1]));
 				rules.add(r);
 				}
@@ -135,8 +131,7 @@ public class Controller {
 	/**
 	 * Sets the count.
 	 *
-	 * @param count
-	 *            the new count
+	 * @param count the new count
 	 */
 	public void setCount(int count) {
 		this.count = count;
@@ -145,6 +140,9 @@ public class Controller {
 	// Leitura dos pesos gerados pelo algoritmo
 	/**
 	 * Read NSGAII.
+	 *
+	 * @param filePesos the file pesos
+	 * @param fileResultados the file resultados
 	 */
 	public void readNSGAII(String filePesos,String fileResultados) {
 		try {
@@ -282,7 +280,7 @@ public class Controller {
 	}
 
 	/**
-	 * Gets the dados tabela.
+	 * Gets the table data.
 	 *
 	 * @return the dados tabela
 	 */
@@ -372,10 +370,8 @@ public class Controller {
 	/**
 	 * Pesos manuais.
 	 *
-	 * @param row
-	 *            the row
-	 * @param value
-	 *            the value
+	 * @param row the row
+	 * @param value the value
 	 */
 	public void pesosManuais(int row, String value) {
 		rules.get(row).setPeso(Double.valueOf(value));
@@ -384,8 +380,7 @@ public class Controller {
 	/**
 	 * Pesos algoritmo.
 	 *
-	 * @param pesos
-	 *            the pesos
+	 * @param pesos the pesos
 	 */
 	// Atribuição dos pesos provenientes do vetor criado pelo algoritmo a cada regra
 	public void pesosAlgoritmo(double[] pesos) {
@@ -418,9 +413,9 @@ public class Controller {
 	}
 
 	/**
-	 * Gets the count.
+	 * Gets the percentage.
 	 *
-	 * @return the count
+	 * @return the percentage
 	 */
 	// Converte o número total de testes em percentagem para apresentação na GUI
 	public String getPercentage() {
@@ -462,15 +457,28 @@ public class Controller {
 		return spam;
 	}
 
+	/**
+	 * Gets the count.
+	 *
+	 * @return the count
+	 */
 	public int getCount() {
 		return count;
 	}
 
+	/**
+	 * Clear rules.
+	 */
 	public void clearRules() {
 		rules.clear();
 		
 	}
 
+	/**
+	 * Checks if rules are defined.
+	 *
+	 * @return true, if is rulesdef
+	 */
 	public boolean isRulesdef() {
 		if(!rules.isEmpty())
 			return true;

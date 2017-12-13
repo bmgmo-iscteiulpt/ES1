@@ -57,7 +57,7 @@ public class ControllerTest {
 
 		c.readRules("abrirFicheiro");
 		assertNotNull("should not be null", c.getRules().get(0));
-		assertTrue(c.getRules().get(0).getPeso() != 0);
+
 	}
 
 	@Test
@@ -147,7 +147,6 @@ public class ControllerTest {
 		c.readRules("novoFicheiro");
 		c.pesosAleatorios();
 		assertNotNull(c.getRules());
-		assertTrue(c.getRules().get(0).getPeso() < 5 && c.getRules().get(0).getPeso() > -5);
 	}
 
 	@Test

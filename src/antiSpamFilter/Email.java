@@ -5,6 +5,7 @@ package antiSpamFilter;
 
 import java.util.ArrayList;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class Email.
  */
@@ -12,9 +13,6 @@ public class Email {
 
 	/** The id. */
 	private String id;
-	
-	/** The rules. */
-	private ArrayList<String> rules;
 	
 	/** The rules index. */
 	private ArrayList<Integer> rulesIndex;
@@ -26,17 +24,7 @@ public class Email {
 	 */
 	public Email(String id) {
 		this.id = id;
-		this.rules = new ArrayList<String>();
 		this.rulesIndex = new ArrayList<Integer>();
-	}
-
-	/**
-	 * Gets the rules.
-	 *
-	 * @return the rules
-	 */
-	public ArrayList<String> getRules() {
-		return rules;
 	}
 
 	/**
@@ -57,15 +45,6 @@ public class Email {
 		this.id = id;
 	}
 	
-	/**
-	 * Adds the rule.
-	 *
-	 * @param rule the rule
-	 */
-	public void addRule(String rule) {
-		rules.add(rule);
-	}
-
 	/**
 	 * Adds the rule index.
 	 *

@@ -3,6 +3,7 @@
  */
 package antiSpamFilter;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class Rule.
  */
@@ -23,6 +24,12 @@ public class Rule {
 		this.name = name;
 	}
 
+	/**
+	 * Instantiates a new rule.
+	 *
+	 * @param name the name
+	 * @param peso the peso
+	 */
 	public Rule(String name, double peso) {
 		this.name=name;
 		this.peso=peso;

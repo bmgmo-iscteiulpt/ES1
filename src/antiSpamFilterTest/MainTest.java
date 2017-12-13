@@ -8,9 +8,9 @@ public class MainTest {
 
 	@Test
 	public void testMain() {
-		new Main();
+		Main m = new Main();
 		String[] args = new String[1];
-		Main.main(args);
+		m.main(args);
 	}
 
 }

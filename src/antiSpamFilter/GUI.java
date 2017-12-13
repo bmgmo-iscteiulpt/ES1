@@ -22,6 +22,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import antiSpamFilterConfigurations.AntiSpamFilterAutomaticConfiguration;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -41,6 +42,7 @@ import java.io.IOException;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class GUI.
  */
@@ -58,22 +60,22 @@ public class GUI {
 	/** The Constant fator. */
 	static final double fator = 1;
 
-	/** The font 1. */
+	/** The f. */
 	private static Font f = new Font("Century Gothic", Font.PLAIN, 18);
 
-	/** The font 2. */
+	/** The f 2. */
 	private static Font f2 = new Font("Century Gothic", Font.PLAIN, 16);
 
-	/** The font 3. */
+	/** The f 3. */
 	private static Font f3 = new Font("Century Gothic", Font.BOLD, 20);
 
-	/** The info textfield. */
+	/** The info. */
 	private JTextField info;
 
-	/** The false positives textfield. */
+	/** The fp. */
 	private JTextField fp;
 
-	/** The false negative textfield. */
+	/** The fn. */
 	private JTextField fn;
 
 	/** The table. */
@@ -85,29 +87,43 @@ public class GUI {
 	/** The scroll. */
 	private JScrollPane scroll;
 
-	/** The file chooser. */
+	/** The fc. */
 	final JFileChooser fc = new JFileChooser();
 
 	/** The colunas. */
 	private String[] colunas;
 
-	/** The running boolean. */
+	/** The running. */
 	private boolean running = false;
 
 	/** The cell text. */
 	private String cellText;
 
+	/** The rules cf. */
 	private JMenuItem rules_cf;
+	
+	/** The ham log. */
 	private JMenuItem ham_log;
+	
+	/** The spam log. */
 	private JMenuItem spam_log;
+	
+	/** The guardar. */
 	private JMenuItem guardar;
+	
+	/** The abrir. */
 	private JMenuItem abrir;
+	
+	/** The limpar. */
 	private JMenuItem limpar;
 
+	/** The algoritmo. */
 	private JButton algoritmo;
 
+	/** The random. */
 	private JButton random;
 
+	/** The iniciar. */
 	private JButton iniciar;
 
 	// FRAME
@@ -178,6 +194,7 @@ public class GUI {
 				dialog.setMode(FileDialog.LOAD);
 				dialog.setFile("*.cf");
 				dialog.setVisible(true);
+				dialog.setFile("rules.cf");
 				String file = dialog.getDirectory() + dialog.getFile();
 				if (dialog.getFile() != null) {
 					if (!dialog.getFile().contains("rules")) {
@@ -462,6 +479,7 @@ public class GUI {
 		addinfo("Bem Vindo");
 
 	}
+	
 	/**
 	 * Criar tabela.
 	 */
@@ -610,8 +628,7 @@ public class GUI {
 	/**
 	 * Addinfo.
 	 *
-	 * @param s
-	 *            the s
+	 * @param s the s
 	 */
 	public void addinfo(String s) {
 		new Thread(new Runnable() {
@@ -645,9 +662,6 @@ public class GUI {
 
 	/**
 	 * Classificar.
-	 *
-	 * @param tipo
-	 *            the tipo
 	 */
 	public void classificar() {
 
@@ -655,73 +669,90 @@ public class GUI {
 			if (controller.calcularFP() < total * 0.20) {
 				fp.setForeground(Color.RED);
 				fn.setForeground(Color.RED);
-			} else if (controller.calcularFP() < total * 0.7 && controller.calcularFP() > total * 0.2) {
-				fp.setForeground(Color.BLUE);
-				fn.setForeground(Color.BLUE);
 			} else {
 				fp.setForeground(Color.GREEN);
 				fn.setForeground(Color.GREEN);
 			}
 	}
-
+	
 	/**
-	 * @return the rules_cf
+	 * Gets the rules cf JMenuItem.
+	 *
+	 * @return the rules cf
 	 */
 	public JMenuItem getRules_cf() {
 		return rules_cf;
 	}
-
+	
 	/**
-	 * @return the ham_log
+	 * Gets the ham log JMenuItem.
+	 *
+	 * @return the ham log 
 	 */
 	public JMenuItem getHam_log() {
 		return ham_log;
 	}
-
+	
 	/**
-	 * @return the spam_log
+	 * Gets the spam log  JMenuItem.
+	 *
+	 * @return the spam log
 	 */
 	public JMenuItem getSpam_log() {
 		return spam_log;
 	}
-
+	
 	/**
+	 * Gets the guardar JMenuItem.
+	 *
 	 * @return the guardar
 	 */
 	public JMenuItem getGuardar() {
 		return guardar;
 	}
-
+	
 	/**
+	 * Gets the abrir JMenuItem.
+	 *
 	 * @return the abrir
 	 */
 	public JMenuItem getAbrir() {
 		return abrir;
 	}
-
+	
 	/**
+	 * Gets the limpar JMenuItem.
+	 *
 	 * @return the limpar
 	 */
 	public JMenuItem getLimpar() {
 		return limpar;
 	}
+	
 	/**
+	 * Gets the algoritmo button.
+	 *
 	 * @return the algoritmo
 	 */
 	public JButton getAlgoritmo() {
 		return algoritmo;
 	}
+	
 	/**
+	 * Gets the random button.
+	 *
 	 * @return the random
 	 */
 	public JButton getRandom() {
 		return random;
 	}
+	
 	/**
+	 * Gets the iniciar button.
+	 *
 	 * @return the iniciar
 	 */
 	public JButton getIniciar() {
 		return iniciar;
 	}
-
 }

@@ -14,15 +14,9 @@ public class EmailTest {
 	@Test
 	public void testEmail() {
 		assertNotNull("should not be null", e);
-		assertNotNull("should not be null", e.getRules());
 		assertNotNull("should not be null", e.getRulesIndex());
 		assertEquals("failure - strings are not equal", "id1", e.getId());
 
-	}
-
-	@Test
-	public void testGetRules() {
-		assertNotNull("should not be null", e.getRules());
 	}
 
 	@Test
@@ -34,12 +28,6 @@ public class EmailTest {
 	public void testSetId() {
 		e.setId("id2");
 		assertEquals("failure - strings are not equal", "id2", e.getId());
-	}
-
-	@Test
-	public void testAddRule() {
-		e.addRule("Regra");
-		assertEquals("failure - strings are not equal", "Regra", e.getRules().get(0));
 	}
 
 	@Test
