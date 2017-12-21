@@ -5,14 +5,14 @@ package antiSpamFilter;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class Main.
+ * Classe Main.
  */
 public class Main {
 
 	/**
-	 * The main method.
+	 * Metodo main
 	 *
-	 * @param args the arguments
+	 * @param argumento args
 	 */
 	public static void main(String[] args) {
 		new GUI();

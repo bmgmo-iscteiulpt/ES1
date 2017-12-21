@@ -7,20 +7,20 @@ import java.util.ArrayList;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class Email.
+ * Classe Email.
  */
 public class Email {
 
-	/** The id. */
+	/** O id. */
 	private String id;
 	
-	/** The rules index. */
+	/** Lista de index's das regras presentes nos emails */
 	private ArrayList<Integer> rulesIndex;
 	
 	/**
-	 * Instantiates a new email.
+	 * Instancia um novo Email.
 	 *
-	 * @param id the id
+	 * @param id do email
 	 */
 	public Email(String id) {
 		this.id = id;
@@ -28,27 +28,27 @@ public class Email {
 	}
 
 	/**
-	 * Gets the rules index.
+	 * Retorna a lista de indexs
 	 *
-	 * @return the rules index
+	 * @return a lista de indexs
 	 */
 	public ArrayList<Integer> getRulesIndex() {
 		return rulesIndex;
 	}
 
 	/**
-	 * Sets the id.
+	 * Define o id
 	 *
-	 * @param id the new id
+	 * @param id do email
 	 */
 	public void setId(String id) {
 		this.id = id;
 	}
 	
 	/**
-	 * Adds the rule index.
+	 * Adiciona um index á lista 
 	 *
-	 * @param j the j
+	 * @param index j
 	 */
 	public void addRuleIndex(int j) {
 		rulesIndex.add(j);
@@ -56,9 +56,9 @@ public class Email {
 	}
 
 	/**
-	 * Gets the id.
+	 * Retorna o id
 	 *
-	 * @return the id
+	 * @return o id
 	 */
 	public String getId() {
 		return id;

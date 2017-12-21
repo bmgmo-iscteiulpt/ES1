@@ -5,30 +5,30 @@ package antiSpamFilter;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class Rule.
+ * Classe Rule.
  */
 public class Rule {
 
-	/** The name. */
+	/** O nome */
 	private String name;
 	
-	/** The peso. */
+	/** O peso. */
 	private double peso;
 	
 	/**
-	 * Instantiates a new rule.
+	 * Instanciação de nova regra.
 	 *
-	 * @param name the name
+	 * @param Nome da regra
 	 */
 	public Rule(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * Instantiates a new rule.
+	 * Instanciação de nova regra com peso já definido
 	 *
-	 * @param name the name
-	 * @param peso the peso
+	 * @param Nome da regra
+	 * @param Peso da regra
 	 */
 	public Rule(String name, double peso) {
 		this.name=name;
