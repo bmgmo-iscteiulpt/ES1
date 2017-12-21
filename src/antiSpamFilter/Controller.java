@@ -15,36 +15,36 @@ import java.util.concurrent.ThreadLocalRandom;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class Controller.
+ * A classe Controller.
  */
 public class Controller {
 
-	/** The instance. */
+	/** A instância da classe. */
 	private static Controller instance = null;
 
-	/** The rules path. */
+	/** O caminho para o ficheiro rules. */
 	private String rulesPath;
 
-	/** The ham path. */
+	/** O caminho para o ficheiro ham. */
 	private String hamPath;
 
-	/** The spam path. */
+	/** O caminho para o ficheiro Spam. */
 	private String spamPath;
 
-	/** The rules. */
+	/** Lista de regras */
 	private ArrayList<Rule> rules;
 
-	/** The ham. */
+	/** Lista de emails ham */
 	private ArrayList<Email> ham;
 
-	/** The spam. */
+	/** Lista de emails spam. */
 	private ArrayList<Email> spam;
 
-	/** The count. */
+	/** Contador de iterações do algoritmo. */
 	private int count;
 
 	/**
-	 * Instantiates a new controller.
+	 *Instancia um controlador
 	 */
 	protected Controller() {
 		this.rules = new ArrayList<>();
@@ -53,11 +53,10 @@ public class Controller {
 		this.count = 0;
 	}
 
-	// Controller definido como singleton
 	/**
-	 * Gets the single instance of Controller.
+	 * Controller definido como singleton
 	 *
-	 * @return single instance of Controller
+	 * @return Instancia unica do controlador
 	 */
 	public static Controller getInstance() {
 		if (instance == null) {
@@ -68,39 +67,37 @@ public class Controller {
 
 	// Definição caminho do ficheiro rules.cf
 	/**
-	 * Sets the rules path.
+	 * Define o caminho para o ficheiro rules.cf.
 	 *
-	 * @param path the new rules path
+	 * @param Caminho para o ficheiro rules.cf
+	 * 
 	 */
 	public void setRulesPath(String path) {
 		this.rulesPath = path;
 	}
 
-	// Definição caminho do ficheiro ham.txt
 	/**
-	 * Sets the ham path.
+	 * Define o caminho para o ficheiro ham.log.
 	 *
-	 * @param path the new ham path
+	 * @param Caminho para o ficheiro ham.log
 	 */
 	public void setHamPath(String path) {
 		this.hamPath = path;
 	}
 
-	// Definição caminho do ficheiro spam.txt
 	/**
-	 * Sets the spam path.
+	 * Define o caminho para o ficheiro spam.log
 	 *
-	 * @param path the new spam path
+	 * @param Caminho para o ficheiro spam.log
 	 */
 	public void setSpamPath(String path) {
 		this.spamPath = path;
 	}
-
-	// Leitura do ficheiro rules.cf, criação de Rules e adição ao vetor
+ 
 	/**
-	 * Read rules.
+	 *Leitura do ficheiro rules.cf, criação de Rules e adição ao vetor
 	 *
-	 * @param tipo the tipo
+	 * @param tipo de leitura (novo ficheiro ou ficheiro já existente)
 	 */
 	public void readRules(String tipo) {
 		rules.clear();
@@ -129,9 +126,9 @@ public class Controller {
 	}
 
 	/**
-	 * Sets the count.
+	 * Altera o contador .
 	 *
-	 * @param count the new count
+	 * @param define o contador
 	 */
 	public void setCount(int count) {
 		this.count = count;
@@ -139,7 +136,7 @@ public class Controller {
 
 	// Leitura dos pesos gerados pelo algoritmo
 	/**
-	 * Read NSGAII.
+	  Lê o ficheiros gerados pelo algoritmo NSGAII.
 	 *
 	 * @param filePesos the file pesos
 	 * @param fileResultados the file resultados
@@ -183,9 +180,8 @@ public class Controller {
 	}
 
 	/**
-	 * Read ham.
+	 * Leitura do ficheiro ham.log, criação de Emails Ham e adição ao vetor
 	 */
-	// Leitura do ficheiro ham.txt, criação de Emails Ham e adição ao vetor
 	public void readHam() {
 		try {
 			ham.clear();
@@ -220,7 +216,7 @@ public class Controller {
 	}
 
 	/**
-	 * Gets the rules path.
+	 * Devolve o caminho do ficheiro rules.cf
 	 *
 	 * @return the rules path
 	 */
@@ -229,7 +225,7 @@ public class Controller {
 	}
 
 	/**
-	 * Gets the ham path.
+	 * Devolve o caminho do ficheiro ham.log
 	 *
 	 * @return the ham path
 	 */
@@ -238,7 +234,7 @@ public class Controller {
 	}
 
 	/**
-	 * Gets the spam path.
+	 * Devolve o caminho do ficheiro spam.log
 	 *
 	 * @return the spam path
 	 */
@@ -247,9 +243,9 @@ public class Controller {
 	}
 
 	/**
-	 * Read spam.
+	 * Leitura do ficheiro spam.txt, criação de Emails Spam e adição ao vetor.
 	 */
-	// Leitura do ficheiro spam.txt, criação de Emails Spam e adição ao vetor
+	
 	public void readSpam() {
 		try {
 			spam.clear();
@@ -280,9 +276,9 @@ public class Controller {
 	}
 
 	/**
-	 * Gets the table data.
+	 * Devole os dados da tabela.
 	 *
-	 * @return the dados tabela
+	 * @return dados tabela
 	 */
 	// Preenchimento da tabela das regras
 	public String[][] getDadosTabela() {
@@ -349,7 +345,7 @@ public class Controller {
 	}
 
 	/**
-	 * Gets the rules.
+	 * Devolve a lista das regras
 	 *
 	 * @return the rules
 	 */
@@ -413,7 +409,7 @@ public class Controller {
 	}
 
 	/**
-	 * Gets the percentage.
+	 * Devolve a percentagem de conclusão calculada
 	 *
 	 * @return the percentage
 	 */
@@ -440,7 +436,7 @@ public class Controller {
 	}
 
 	/**
-	 * Gets the ham.
+	 * Devolve a lista de emails ham
 	 *
 	 * @return the ham
 	 */
@@ -449,7 +445,7 @@ public class Controller {
 	}
 
 	/**
-	 * Gets the spam.
+	 * Devolve a lista de emails spam
 	 *
 	 * @return the spam
 	 */
@@ -458,7 +454,7 @@ public class Controller {
 	}
 
 	/**
-	 * Gets the count.
+	 * Devolve o valor atual do contador
 	 *
 	 * @return the count
 	 */
@@ -467,7 +463,7 @@ public class Controller {
 	}
 
 	/**
-	 * Clear rules.
+	 * Limpa a lista de regras
 	 */
 	public void clearRules() {
 		rules.clear();
@@ -475,7 +471,7 @@ public class Controller {
 	}
 
 	/**
-	 * Checks if rules are defined.
+	 * Verifica se a lista de regras está preenchida.
 	 *
 	 * @return true, if is rulesdef
 	 */
@@ -486,3 +482,4 @@ public class Controller {
 			return false;
 	}
 }
+

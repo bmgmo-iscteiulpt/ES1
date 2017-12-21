@@ -42,94 +42,93 @@ import java.io.IOException;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class GUI.
+ * A Classe GUI.
  */
 public class GUI {
 
-	/** The controller. */
+	/** O controller. */
 	private Controller controller = Controller.getInstance();
 
-	/** The janela principal. */
+	/** A janela principal. */
 	private JFrame janelaPrincipal;
 
-	/** The painel. */
+	/** O painel. */
 	private JPanel painel;
 
-	/** The Constant fator. */
+	/** A constante fator de tamanho da GUI. */
 	static final double fator = 1;
 
-	/** The f. */
+	/** Fonte 1. */
 	private static Font f = new Font("Century Gothic", Font.PLAIN, 18);
 
-	/** The f 2. */
+	/** Fonte 2. */
 	private static Font f2 = new Font("Century Gothic", Font.PLAIN, 16);
 
-	/** The f 3. */
+	/** Fonte 3. */
 	private static Font f3 = new Font("Century Gothic", Font.BOLD, 20);
 
-	/** The info. */
+	/** A janela de info. */
 	private JTextField info;
 
-	/** The fp. */
+	/** A janela indicadora de Falsos Positivos. */
 	private JTextField fp;
 
-	/** The fn. */
+	/** A janela indicadora de Falsos Negativos. */
 	private JTextField fn;
 
-	/** The table. */
+	/** Tabela de regras. */
 	private JTable table;
 
-	/** The model. */
+	/** Modelo da tabela de regras. */
 	private DefaultTableModel model;
 
-	/** The scroll. */
+	/** Scroll da tabela */
 	private JScrollPane scroll;
 
-	/** The fc. */
+	/** File Chooser */
 	final JFileChooser fc = new JFileChooser();
 
-	/** The colunas. */
+	/** Vetor de colunas */
 	private String[] colunas;
 
-	/** The running. */
+	/** Boolean para estado do algoritmo */
 	private boolean running = false;
 
-	/** The cell text. */
+	/** Texto de uma celula */
 	private String cellText;
 
-	/** The rules cf. */
+	/** Menu de escolha do ficheiro rules.cf */
 	private JMenuItem rules_cf;
 	
-	/** The ham log. */
+	/** Menu de escolha do ficheiro ham log. */
 	private JMenuItem ham_log;
 	
-	/** The spam log. */
+	/** Menu de escolha do ficheiro spam log. */
 	private JMenuItem spam_log;
 	
-	/** The guardar. */
+	/** Menu para guardar a configuração atual. */
 	private JMenuItem guardar;
 	
-	/** The abrir. */
+	/** Menu para abrir uma configuração criada anteriormente abrir. */
 	private JMenuItem abrir;
 	
-	/** The limpar. */
+	/** Menu para limpar a tabela de pesos */
 	private JMenuItem limpar;
 
-	/** The algoritmo. */
+	/** Botão algoritmo. */
 	private JButton algoritmo;
 
-	/** The random. */
+	/** Botão random. */
 	private JButton random;
 
-	/** The iniciar. */
-	private JButton iniciar;
+	/** Botão manual manualmente. */
+	private JButton manual;
 
 	// FRAME
 
 	/**
-	 * Instantiates a new gui.
+	 * Instanciamento da gui.
 	 */
 	public GUI() {
 		// configuração da janela-------------------------------------------------
@@ -395,7 +394,7 @@ public class GUI {
 			public void actionPerformed(ActionEvent e) {
 				if (controller.ficheirosDef()) {
 
-					String[] args = {};
+					String[] args = {""};
 
 					new Thread(new Runnable() {
 						public void run() {
@@ -437,6 +436,7 @@ public class GUI {
 		random.setFont(f);
 		random.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				gerarficheiros();
 				if (controller.ficheirosDef()) {
 					controller.pesosAleatorios();
 					setTable();
@@ -454,11 +454,11 @@ public class GUI {
 
 		// Botao Manual---------------------------------------
 
-		iniciar = new JButton("Manual");
-		iniciar.setMinimumSize(new Dimension(140, 60));
+		manual = new JButton("Manual");
+		manual.setMinimumSize(new Dimension(140, 60));
 		;
-		iniciar.setFont(f);
-		iniciar.addActionListener(new ActionListener() {
+		manual.setFont(f);
+		manual.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (controller.ficheirosDef()) {
 					fp.setText(String.valueOf(controller.calcularFP()));
@@ -472,7 +472,7 @@ public class GUI {
 
 		});
 
-		painel.add(iniciar, "cell 2 5 3 1,alignx center");
+		painel.add(manual, "cell 2 5 3 1,alignx center");
 
 		janelaPrincipal.setVisible(true);
 
@@ -480,11 +480,13 @@ public class GUI {
 
 	}
 	
+	
+
 	/**
 	 * Criar tabela.
 	 */
 	// tabela-------------------------------------------------------------------
-	private void criarTabela() {
+	public void criarTabela() {
 		colunas = new String[] { "Regras", "Peso" };
 		model = new DefaultTableModel(controller.getDadosTabela(), colunas) {
 			/**
@@ -598,7 +600,7 @@ public class GUI {
 	}
 
 	/**
-	 * Sets the table.
+	 * Atualizar a tabela.
 	 */
 	public void setTable() {
 		String[][] rules = controller.getDadosTabela();
@@ -626,9 +628,9 @@ public class GUI {
 	// INFO-----------------
 
 	/**
-	 * Addinfo.
+	 * Adicionar informação á janela info.
 	 *
-	 * @param s the s
+	 * @param s , sendo a String a mostrar
 	 */
 	public void addinfo(String s) {
 		new Thread(new Runnable() {
@@ -676,7 +678,7 @@ public class GUI {
 	}
 	
 	/**
-	 * Gets the rules cf JMenuItem.
+	 * Devolve o botão do menu rules_cf.
 	 *
 	 * @return the rules cf
 	 */
@@ -685,7 +687,7 @@ public class GUI {
 	}
 	
 	/**
-	 * Gets the ham log JMenuItem.
+	 * Devolve o ham log JMenuItem.
 	 *
 	 * @return the ham log 
 	 */
@@ -694,7 +696,7 @@ public class GUI {
 	}
 	
 	/**
-	 * Gets the spam log  JMenuItem.
+	 * Devolve o  spam log  JMenuItem.
 	 *
 	 * @return the spam log
 	 */
@@ -703,7 +705,7 @@ public class GUI {
 	}
 	
 	/**
-	 * Gets the guardar JMenuItem.
+	 * Devolve o  guardar JMenuItem.
 	 *
 	 * @return the guardar
 	 */
@@ -712,7 +714,7 @@ public class GUI {
 	}
 	
 	/**
-	 * Gets the abrir JMenuItem.
+	 * Devolve o  abrir JMenuItem.
 	 *
 	 * @return the abrir
 	 */
@@ -721,7 +723,7 @@ public class GUI {
 	}
 	
 	/**
-	 * Gets the limpar JMenuItem.
+	 * Devolve o  limpar JMenuItem.
 	 *
 	 * @return the limpar
 	 */
@@ -730,7 +732,7 @@ public class GUI {
 	}
 	
 	/**
-	 * Gets the algoritmo button.
+	 * Devolve o botão algoritmo.
 	 *
 	 * @return the algoritmo
 	 */
@@ -739,7 +741,7 @@ public class GUI {
 	}
 	
 	/**
-	 * Gets the random button.
+	 * Devolve o botão random.
 	 *
 	 * @return the random
 	 */
@@ -748,11 +750,50 @@ public class GUI {
 	}
 	
 	/**
-	 * Gets the iniciar button.
+	 * Devolve o botão manual manual.
 	 *
-	 * @return the iniciar
+	 * @return the manual
 	 */
-	public JButton getIniciar() {
-		return iniciar;
+	public JButton getmanual() {
+		return manual;
+	}
+	/**
+	 * Gera os ficheiros Latex e gráfico
+	 *
+	 */
+	public void gerarficheiros() {
+		try {
+			String[] params = new String[2];
+			params[0]="C:\\Program Files\\R\\R-3.4.3\\bin\\x64\\Rscript.exe";
+			params[1]="C:\\Users\\bruno\\git\\ES1-2017-METIA1-47\\experimentBaseDirectory\\AntiSpamStudy\\R\\HV.Boxplot.R";
+			
+			String [] envp = new String[1];
+			envp[0] = "Path=C:\\Program Files\\R\\R-3.4.3\\bin\\x64";
+			
+			Process process = Runtime.getRuntime().exec(params,envp,new File("C:\\Users\\bruno\\git\\ES1-2017-METIA1-47\\experimentBaseDirectory\\AntiSpamStudy\\R"));
+		
+			
+			System.out.println("Ficheiros criados criados");
+		}
+		catch(IOException e){
+			e.printStackTrace();
+		}
+		
+		try {
+			String[] params = new String[2];
+			params[0]="C:\\Program Files\\MikTeX 2.9\\miktex\\bin\\x64\\pdflatex.exe";
+			params[1]="C:\\Users\\bruno\\git\\ES1-2017-METIA1-47\\experimentBaseDirectory\\AntiSpamStudy\\latex\\AntiSpamStudy.tex";
+			
+			String [] envp = new String[1];
+			envp[0] = "Path=C:\\Program Files\\MiKTeX 2.9\\miktex\\bin\\x64";
+			
+			Process process = Runtime.getRuntime().exec(params,envp,new File("C:\\Users\\bruno\\git\\ES1-2017-METIA1-47\\experimentBaseDirectory\\AntiSpamStudy\\latex"));
+		
+			
+			System.out.println("Ficheiros criados criados");
+		}
+		catch(IOException e){
+			e.printStackTrace();
+		}
 	}
 }

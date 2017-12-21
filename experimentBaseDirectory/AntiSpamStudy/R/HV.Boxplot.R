@@ -1,5 +1,6 @@
 postscript("HV.Boxplot.eps", horizontal=FALSE, onefile=FALSE, height=8, width=12, pointsize=10)
-resultDirectory<-"C:/Users/Bruno/git/ES1-2017-METIA1-47/experimentBaseDirectory/AntiSpamStudy/data"
+resultDirectory<-"C:\\Users\\bruno\\git\\ES1-2017-METIA1-47\\experimentBaseDirectory\\AntiSpamStudy\\data";
+			"
 qIndicator <- function(indicator, problem)
 {
 fileNSGAII<-paste(resultDirectory, "NSGAII", sep="/")
