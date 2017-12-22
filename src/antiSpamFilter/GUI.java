@@ -415,6 +415,7 @@ public class GUI {
 								fp.setText(String.valueOf(controller.calcularFP()));
 								fn.setText(String.valueOf(controller.calcularFN()));
 								classificar();
+								gerarficheiros();
 							} catch (IOException e1) {
 								System.out.println("Erro na thread do algoritmo");
 								e1.printStackTrace();
@@ -436,7 +437,7 @@ public class GUI {
 		random.setFont(f);
 		random.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				gerarficheiros();
+				
 				if (controller.ficheirosDef()) {
 					controller.pesosAleatorios();
 					setTable();
@@ -444,6 +445,7 @@ public class GUI {
 					fp.setText(String.valueOf(controller.calcularFP()));
 					fn.setText(String.valueOf(controller.calcularFN()));
 					classificar();
+					gerarficheiros();
 				} else {
 					addinfo("Verifique os caminhos dos ficheiros");
 				}
@@ -464,6 +466,7 @@ public class GUI {
 					fp.setText(String.valueOf(controller.calcularFP()));
 					fn.setText(String.valueOf(controller.calcularFN()));
 					classificar();
+					gerarficheiros();
 					addinfo("Pesos manuais gerados");
 				} else {
 					addinfo("Verifique os caminhos dos ficheiros");
